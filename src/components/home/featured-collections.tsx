@@ -15,7 +15,7 @@ interface FeaturedCollectionsProps {
 
 export function FeaturedCollections({ collections }: FeaturedCollectionsProps) {
     return (
-        <Section className="bg-secondary/30">
+        <Section grid>
             <Heading
                 title="Curated Collections"
                 description="Explore our thoughtfully designed categories for every aspect of your life."

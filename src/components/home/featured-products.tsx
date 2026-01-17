@@ -15,7 +15,7 @@ interface FeaturedProductsProps {
 export function FeaturedProducts({ products }: FeaturedProductsProps) {
 
     return (
-        <Section>
+        <Section className="bg-secondary" grid>
             <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-10 gap-4">
                 <Heading
                     title="Trending Essentials"
