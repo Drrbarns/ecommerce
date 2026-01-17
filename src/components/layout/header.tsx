@@ -48,11 +48,9 @@ export function Header() {
     return (
         <header
             className={cn(
-                "z-50 w-full transition-all duration-300",
+                "z-50 w-full transition-all duration-300 border-b bg-background",
                 isHome ? "fixed top-0" : "sticky top-0",
-                scrolled || !isHome
-                    ? "border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
-                    : "bg-transparent text-white border-b border-white/10"
+                scrolled && "shadow-sm"
             )}
         >
             <Container className="flex h-16 items-center justify-between">
