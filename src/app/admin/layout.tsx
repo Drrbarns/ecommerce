@@ -26,7 +26,7 @@ export default async function AdminLayout({
         <div className="min-h-screen bg-secondary/30">
             <AdminSidebar enabledModules={enabledModules} />
             <div className="lg:pl-64">
-                <AdminHeader />
+                <AdminHeader enabledModules={enabledModules} />
                 <main className="p-4 lg:p-6">
                     {children}
                 </main>

@@ -23,7 +23,11 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export function AdminHeader() {
+interface AdminHeaderProps {
+    enabledModules?: string[];
+}
+
+export function AdminHeader({ enabledModules = [] }: AdminHeaderProps) {
     const router = useRouter();
 
     const handleLogout = async () => {
@@ -44,7 +48,7 @@ export function AdminHeader() {
                     </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="w-64 p-0">
-                    <AdminSidebar />
+                    <AdminSidebar enabledModules={enabledModules} variant="mobile" />
                 </SheetContent>
             </Sheet>
 

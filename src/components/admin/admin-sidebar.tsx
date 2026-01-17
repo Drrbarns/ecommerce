@@ -75,9 +75,10 @@ const settingsNavItems: NavItem[] = [
 
 interface AdminSidebarProps {
     enabledModules?: string[];
+    variant?: "desktop" | "mobile";
 }
 
-export function AdminSidebar({ enabledModules = [] }: AdminSidebarProps) {
+export function AdminSidebar({ enabledModules = [], variant = "desktop" }: AdminSidebarProps) {
     const pathname = usePathname();
 
     // Filter module items based on enabled modules
@@ -88,8 +89,12 @@ export function AdminSidebar({ enabledModules = [] }: AdminSidebarProps) {
     // Combine all visible nav items
     const allNavItems = [...coreNavItems, ...visibleModuleItems, ...settingsNavItems];
 
+    const asideClassName = variant === "mobile"
+        ? "flex flex-col h-full w-full bg-background"
+        : "fixed left-0 top-0 z-40 hidden h-screen w-64 border-r bg-background lg:block";
+
     return (
-        <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 border-r bg-background lg:block">
+        <aside className={asideClassName}>
             <div className="flex h-full flex-col">
                 {/* Logo */}
                 <div className="flex h-16 items-center border-b px-6">
