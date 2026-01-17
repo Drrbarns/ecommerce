@@ -89,12 +89,7 @@ export function Header() {
                 {/* Logo */}
                 <div className="flex lg:w-0 lg:flex-1">
                     <Link href="/" className="flex items-center gap-2">
-                        <span
-                            className={cn(
-                                "font-heading text-2xl font-bold tracking-tight",
-                                !scrolled && isHome ? "text-white" : "text-primary"
-                            )}
-                        >
+                        <span className="font-heading text-2xl font-bold tracking-tight text-primary">
                             {siteConfig.name}
                         </span>
                     </Link>
@@ -106,10 +101,7 @@ export function Header() {
                         <Link
                             key={item.href}
                             href={item.href}
-                            className={cn(
-                                "text-sm font-medium transition-colors hover:text-primary",
-                                !scrolled && isHome ? "text-white/90 hover:text-white" : "text-muted-foreground"
-                            )}
+                            className="text-sm font-medium transition-colors hover:text-primary text-muted-foreground"
                         >
                             {item.name}
                         </Link>
@@ -120,11 +112,7 @@ export function Header() {
                 <div className="flex flex-1 items-center justify-end gap-2 md:gap-4">
                     <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
                         <DialogTrigger asChild>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className={cn(!scrolled && isHome && "text-white hover:bg-white/10 hover:text-white")}
-                            >
+                            <Button variant="ghost" size="icon">
                                 <Search className="h-5 w-5" />
                                 <span className="sr-only">Search</span>
                             </Button>
@@ -146,11 +134,7 @@ export function Header() {
                         </DialogContent>
                     </Dialog>
 
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className={cn(!scrolled && isHome && "text-white hover:bg-white/10 hover:text-white")}
-                    >
+                    <Button variant="ghost" size="icon">
                         <User className="h-5 w-5" />
                         <span className="sr-only">Account</span>
                     </Button>
@@ -158,7 +142,7 @@ export function Header() {
                         variant="ghost"
                         size="icon"
                         onClick={() => setOpen(true)}
-                        className={cn("relative", !scrolled && isHome && "text-white hover:bg-white/10 hover:text-white")}
+                        className="relative"
                     >
                         <ShoppingBag className="h-5 w-5" />
                         {getCartCount() > 0 && (
