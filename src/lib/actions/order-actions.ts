@@ -347,3 +347,44 @@ export async function updateOrderStatusAdmin(
     return { success: true };
 }
 
+/**
+ * Get order by tracking number (for customer tracking page)
+ */
+export async function getOrderByTrackingNumber(trackingNumber: string) {
+    if (!trackingNumber || trackingNumber.trim() === '') {
+        return { success: false, error: 'Please enter a tracking number' };
+    }
+
+    const { data: order, error } = await supabaseAdmin
+        .from('orders')
+        .select(`
+            id,
+            status,
+            tracking_number,
+            shipping_carrier,
+            tracking_url,
+            created_at,
+            updated_at,
+            shipping_address
+        `)
+        .eq('tracking_number', trackingNumber.trim())
+        .single();
+
+    if (error || !order) {
+        return { success: false, error: 'Order not found. Please check your tracking number.' };
+    }
+
+    return {
+        success: true,
+        order: {
+            id: order.id,
+            status: order.status,
+            trackingNumber: order.tracking_number,
+            carrier: order.shipping_carrier,
+            trackingUrl: order.tracking_url,
+            createdAt: order.created_at,
+            updatedAt: order.updated_at,
+            recipientName: (order.shipping_address as { name?: string })?.name || 'Customer',
+        }
+    };
+}
