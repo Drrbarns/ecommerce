@@ -17,7 +17,7 @@ interface FeaturedCollectionsProps {
 
 export function FeaturedCollections({ collections }: FeaturedCollectionsProps) {
     return (
-        <Section grid className="py-24">
+        <Section grid className="py-24 bg-zinc-50/50 dark:bg-zinc-950/50">
             <div className="flex items-end justify-between mb-12">
                 <Heading
                     title="Curated Collections"
