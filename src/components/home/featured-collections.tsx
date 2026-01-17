@@ -32,18 +32,15 @@ export function FeaturedCollections({ collections }: FeaturedCollectionsProps) {
                 </Button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:auto-rows-[280px] lg:auto-rows-[320px]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {collections.map((collection, index) => (
                     <motion.div
                         key={collection.id}
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.4, delay: index * 0.1 }}
-                        className={cn(
-                            "group relative overflow-hidden rounded-3xl bg-zinc-100 dark:bg-zinc-900 border border-border/5",
-                            index === 0 ? "md:col-span-2 md:row-span-2 aspect-[4/3] md:aspect-auto" : "md:col-span-1 md:row-span-1 aspect-square md:aspect-auto"
-                        )}
+                        className="group relative overflow-hidden rounded-3xl bg-zinc-100 dark:bg-zinc-900 border border-border/5 aspect-[3/4]"
                     >
                         <Link href={`/collections/${collection.slug}`} className="block w-full h-full relative">
                             {/* Image Background */}
@@ -52,28 +49,21 @@ export function FeaturedCollections({ collections }: FeaturedCollectionsProps) {
                                 alt={collection.name}
                                 fill
                                 className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                                sizes={index === 0 ? "(max-width: 768px) 100vw, 66vw" : "(max-width: 768px) 100vw, 33vw"}
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                             />
 
                             {/* Premium Gradient Overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-80 group-hover:opacity-70 transition-opacity duration-500" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-70 transition-opacity duration-500" />
 
                             {/* Content */}
-                            <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end text-white">
-                                <div className="transform transition-transform duration-300 translate-y-2 group-hover:translate-y-0">
-                                    <p className="text-sm font-medium text-white/80 mb-2 opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 delay-100">
-                                        Collection
-                                    </p>
-                                    <h3 className={cn(
-                                        "font-heading font-bold tracking-tight text-white mb-2",
-                                        index === 0 ? "text-3xl md:text-5xl" : "text-2xl md:text-3xl"
-                                    )}>
+                            <div className="absolute inset-0 p-6 flex flex-col justify-end text-white">
+                                <div className="transform transition-transform duration-300 translate-y-4 group-hover:translate-y-0">
+                                    <h3 className="font-heading text-2xl font-bold tracking-tight text-white mb-2">
                                         {collection.name}
                                     </h3>
 
-                                    <div className="h-0 overflow-hidden group-hover:h-auto group-hover:mt-4 transition-all duration-300 origin-bottom">
-                                        <span className="inline-flex items-center text-sm font-semibold text-white/90">
+                                    <div className="h-0 overflow-hidden group-hover:h-auto opacity-0 group-hover:opacity-100 transition-all duration-300">
+                                        <span className="inline-flex items-center text-sm font-semibold text-white/90 mt-2">
                                             Shop Collection <ArrowRight className="ml-2 h-4 w-4" />
                                         </span>
                                     </div>
