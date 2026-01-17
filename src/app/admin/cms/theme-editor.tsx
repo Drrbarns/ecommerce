@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Save, Loader2, RotateCcw, Palette } from "lucide-react";
-import { updateTheme, resetThemeToDefaults, CMSTheme } from "@/lib/actions/cms-actions";
+import { updateTheme, resetThemeToDefaults, resetHeroDesignToDefaults, CMSTheme } from "@/lib/actions/cms-actions";
 
 interface ThemeEditorProps {
     theme: CMSTheme;
@@ -56,6 +56,7 @@ export function ThemeEditor({ theme }: ThemeEditorProps) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [isResetting, setIsResetting] = useState(false);
+    const [isResettingHero, setIsResettingHero] = useState(false);
 
     const [colors, setColors] = useState({
         primary_color: theme.primary_color,
@@ -107,6 +108,20 @@ export function ThemeEditor({ theme }: ThemeEditorProps) {
         }
     };
 
+    const handleResetHero = async () => {
+        if (!confirm("Reset homepage (Hero) design to premium defaults?")) return;
+        setIsResettingHero(true);
+        const result = await resetHeroDesignToDefaults();
+        setIsResettingHero(false);
+
+        if (result.success) {
+            toast.success("Homepage design restored!");
+            router.refresh();
+        } else {
+            toast.error(result.error || "Failed decrease");
+        }
+    };
+
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
             <div className="flex items-center justify-between">
@@ -116,19 +131,34 @@ export function ThemeEditor({ theme }: ThemeEditorProps) {
                         Customize your store&apos;s color scheme
                     </span>
                 </div>
-                <Button
-                    type="button"
-                    variant="outline"
-                    onClick={handleReset}
-                    disabled={isResetting}
-                >
-                    {isResetting ? (
-                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                    ) : (
-                        <RotateCcw className="h-4 w-4 mr-2" />
-                    )}
-                    Reset to Defaults
-                </Button>
+                <div className="flex gap-2">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        onClick={handleResetHero}
+                        disabled={isResettingHero}
+                    >
+                        {isResettingHero ? (
+                            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                        ) : (
+                            <RotateCcw className="h-4 w-4 mr-2" />
+                        )}
+                        Reset Homepage
+                    </Button>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        onClick={handleReset}
+                        disabled={isResetting}
+                    >
+                        {isResetting ? (
+                            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                        ) : (
+                            <RotateCcw className="h-4 w-4 mr-2" />
+                        )}
+                        Global Reset
+                    </Button>
+                </div>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -385,6 +415,6 @@ export function ThemeEditor({ theme }: ThemeEditorProps) {
                     </>
                 )}
             </Button>
-        </form>
+        </form >
     );
 }

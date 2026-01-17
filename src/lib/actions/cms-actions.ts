@@ -279,3 +279,48 @@ export async function resetThemeToDefaults(themeId: string) {
 
     return { success: true };
 }
+
+/**
+ * Reset Hero section to Premium Default Design
+ */
+export async function resetHeroDesignToDefaults() {
+    const defaultHeroDesign = {
+        backgroundColor: "transparent", // Use global theme background
+        cardBackgroundColor: "#18181B", // Zinc 950 (Dark Premium)
+        textColor: "#FFFFFF",
+        subtitleColor: "#A1A1AA", // Zinc 400
+        overlayOpacity: 0.2,
+    };
+
+    // We only update the styling fields, not the content text
+    const { data: currentHero } = await supabase
+        .from("cms_content")
+        .select("content")
+        .eq("section_key", "hero")
+        .single();
+
+    if (!currentHero) return { success: false, error: "Hero section not found" };
+
+    const newContent = {
+        ...(currentHero.content as object),
+        ...defaultHeroDesign
+    };
+
+    const { error } = await supabase
+        .from("cms_content")
+        .update({
+            content: newContent,
+            updated_at: new Date().toISOString(),
+        })
+        .eq("section_key", "hero");
+
+    if (error) {
+        console.error("Error resetting hero design:", error);
+        return { success: false, error: error.message };
+    }
+
+    revalidatePath("/");
+    revalidatePath("/admin/cms");
+
+    return { success: true };
+}
