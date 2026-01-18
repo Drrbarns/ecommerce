@@ -32,6 +32,7 @@ export default async function CollectionsPage() {
                     <Heading
                         title={data.title}
                         description={data.description}
+                        align="center"
                     />
                 </div>
 

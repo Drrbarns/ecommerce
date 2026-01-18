@@ -31,6 +31,7 @@ export default async function AboutPage() {
                         title={data.title}
                         description={data.description}
                         className="mb-8"
+                        align="center"
                     />
                 </div>
 
