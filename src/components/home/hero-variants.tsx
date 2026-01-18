@@ -14,7 +14,7 @@ interface HeroVariantProps {
 export function HeroSplit({ hero }: HeroVariantProps) {
     return (
         <section
-            className="w-full px-4 pt-20 md:px-6 md:pt-24 lg:px-8 lg:pt-28 pb-12"
+            className="w-full px-4 pt-8 md:px-6 md:pt-12 lg:px-8 lg:pt-16 pb-12"
             style={{ backgroundColor: hero.backgroundColor || '#0B1220' }}
         >
             <div
