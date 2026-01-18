@@ -5,9 +5,10 @@ import { CategoryEditForm } from "./edit-form";
 export default async function CategoryEditPage({
     params,
 }: {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }) {
-    const category = await getCategoryById(params.id);
+    const { id } = await params;
+    const category = await getCategoryById(id);
 
     if (!category) {
         notFound();
