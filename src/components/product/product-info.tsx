@@ -97,10 +97,11 @@ export function ProductInfo({ product }: ProductInfoProps) {
             </div>
 
             {/* Actions */}
-            <div className="flex flex-col gap-4 sm:flex-row mt-4">
+            <div className="flex flex-col gap-3 sm:flex-row mt-6">
                 <Button
                     size="lg"
-                    className="h-12 w-full flex-1 rounded-full text-base"
+                    variant="outline"
+                    className="h-12 w-full flex-1 rounded-full text-base border-2 hover:bg-secondary/50 transition-colors font-medium"
                     onClick={() => {
                         addItem(product, 1, selectedSize, selectedColor);
                         toast.success("Added to cart");
@@ -110,8 +111,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
                 </Button>
                 <Button
                     size="lg"
-                    variant="outline"
-                    className="h-12 w-full flex-1 rounded-full text-base"
+                    className="h-12 w-full flex-1 rounded-full text-base font-semibold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all bg-black text-white hover:bg-black/90"
                     onClick={() => {
                         addItem(product, 1, selectedSize, selectedColor);
                         setOpen(true);
