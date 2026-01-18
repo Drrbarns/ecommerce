@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Layout, Palette, Type, Image, Settings } from "lucide-react";
+import { Layout, Palette, Type, Image, Settings, LayoutDashboard } from "lucide-react";
 import { getAllCMSContent, getActiveTheme } from "@/lib/actions/cms-actions";
 import { getAdvancedSettings } from "@/lib/actions/cms-advanced-actions";
 import { HeroEditor } from "./hero-editor";
@@ -8,6 +8,8 @@ import { FooterEditor } from "./footer-editor";
 import { ThemeEditor } from "./theme-editor";
 import { ContentSectionsList } from "./content-sections-list";
 import { AdvancedSettingsEditor } from "./advanced-settings-editor";
+import { HomepageEditor } from "./homepage-editor";
+import { Button } from "@/components/ui/button";
 
 export default async function AdminCMSPage() {
     const [sections, theme, advancedSettings] = await Promise.all([
@@ -16,12 +18,12 @@ export default async function AdminCMSPage() {
         getAdvancedSettings(),
     ]);
 
+    const homepageSettings = sections.find(s => s.section_key === 'homepage_settings');
     const heroSection = sections.find(s => s.section_key === 'hero');
     const footerSection = sections.find(s => s.section_key === 'footer');
 
     return (
         <div className="space-y-6">
-            {/* Page Header */}
             <div>
                 <h1 className="text-3xl font-bold tracking-tight">Content Management</h1>
                 <p className="text-muted-foreground">
@@ -29,8 +31,12 @@ export default async function AdminCMSPage() {
                 </p>
             </div>
 
-            <Tabs defaultValue="hero" className="space-y-6">
-                <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 lg:w-auto lg:inline-flex">
+            <Tabs defaultValue="layout" className="space-y-6">
+                <TabsList className="grid w-full grid-cols-2 md:grid-cols-6 lg:w-auto lg:inline-flex">
+                    <TabsTrigger value="layout" className="gap-2">
+                        <LayoutDashboard className="h-4 w-4" />
+                        Layout
+                    </TabsTrigger>
                     <TabsTrigger value="hero" className="gap-2">
                         <Image className="h-4 w-4" />
                         Hero
@@ -53,6 +59,26 @@ export default async function AdminCMSPage() {
                     </TabsTrigger>
                 </TabsList>
 
+                {/* Layout Tab */}
+                <TabsContent value="layout">
+                    {homepageSettings ? (
+                        <HomepageEditor section={homepageSettings} />
+                    ) : (
+                        <Card>
+                            <CardContent className="p-6 text-center text-muted-foreground space-y-4">
+                                <p>Homepage settings not found. Please initialize sections to enable layout selection.</p>
+                                <form action={async () => {
+                                    "use server";
+                                    const { seedSectionColors } = await import("@/lib/actions/cms-actions");
+                                    await seedSectionColors();
+                                }}>
+                                    <Button>Initialize Sections</Button>
+                                </form>
+                            </CardContent>
+                        </Card>
+                    )}
+                </TabsContent>
+
                 {/* Hero Tab */}
                 <TabsContent value="hero">
                     {heroSection ? (
@@ -69,7 +95,7 @@ export default async function AdminCMSPage() {
                 {/* Sections Tab */}
                 <TabsContent value="sections">
                     <ContentSectionsList sections={sections.filter(s =>
-                        !['hero', 'footer'].includes(s.section_key)
+                        !['hero', 'footer', 'homepage_settings'].includes(s.section_key)
                     )} />
                 </TabsContent>
 

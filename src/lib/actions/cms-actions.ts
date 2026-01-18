@@ -475,6 +475,17 @@ export async function seedSectionColors() {
                 backgroundColor: "#FFFFFF",
                 textColor: "#18181B"
             }
+        },
+        {
+            key: 'homepage_settings',
+            name: 'Homepage Design',
+            defaultContent: {
+                layout: 'classic', // classic, modern, luxury
+                showHero: true,
+                showCollections: true,
+                showProducts: true,
+                showNewsletter: true
+            }
         }
     ];
 
