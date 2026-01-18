@@ -1,7 +1,7 @@
 import { Hero } from "@/components/home/hero";
 import { FeaturedCollections } from "@/components/home/featured-collections";
-import { FeaturedProducts } from "@/components/home/featured-products";
 import { Newsletter } from "@/components/home/newsletter";
+import { ProductGrid } from "@/components/home/product-grid";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -24,7 +24,7 @@ interface HomeLayoutProps {
 
 /**
  * CLASSIC LAYOUT
- * The standard, balanced e-commerce layout.
+ * The standard, balanced e-commerce layout with traditional product cards.
  */
 export function HomeClassic({ data }: HomeLayoutProps) {
     return (
@@ -35,8 +35,10 @@ export function HomeClassic({ data }: HomeLayoutProps) {
                 backgroundColor={data.collectionContent?.backgroundColor || "#FAFAFA"}
                 variant="classic"
             />
-            <FeaturedProducts
+            <ProductGrid
                 products={data.featuredProducts}
+                title="Featured Products"
+                subtitle="Handpicked items just for you"
                 backgroundColor={data.productContent?.backgroundColor || "#F3F4F6"}
                 variant="classic"
             />
@@ -51,7 +53,7 @@ export function HomeClassic({ data }: HomeLayoutProps) {
 
 /**
  * MODERN LAYOUT
- * Bold typography, high contrast, focused on products first.
+ * Bold typography, high contrast, product-first approach with dynamic cards.
  */
 export function HomeModern({ data }: HomeLayoutProps) {
     return (
@@ -67,10 +69,12 @@ export function HomeModern({ data }: HomeLayoutProps) {
                 </div>
             </div>
 
-            {/* Products First */}
-            <FeaturedProducts
+            {/* Products First - Using Modern Variant */}
+            <ProductGrid
                 products={data.featuredProducts}
-                backgroundColor={data.productContent?.backgroundColor || "#FFFFFF"}
+                title="Now Trending"
+                subtitle="What everyone's buying right now"
+                backgroundColor="#000000"
                 variant="modern"
             />
 
@@ -95,7 +99,7 @@ export function HomeModern({ data }: HomeLayoutProps) {
 
 /**
  * LUXURY LAYOUT
- * Minimal, editorial, lots of whitespace.
+ * Minimal, editorial, lots of whitespace with elegant product presentation.
  */
 export function HomeLuxury({ data }: HomeLayoutProps) {
     return (
@@ -120,10 +124,12 @@ export function HomeLuxury({ data }: HomeLayoutProps) {
                 variant="luxury"
             />
 
-            {/* Curated Products */}
+            {/* Curated Products - Using Luxury Variant */}
             <section className="py-24 bg-zinc-50">
-                <FeaturedProducts
+                <ProductGrid
                     products={data.featuredProducts}
+                    title="The Collection"
+                    subtitle="Carefully curated pieces"
                     backgroundColor="transparent"
                     variant="luxury"
                 />

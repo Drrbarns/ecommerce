@@ -123,6 +123,72 @@ export interface PromoBannerContent {
     textColor: string;
 }
 
+export interface AnnouncementBarContent {
+    enabled: boolean;
+    text: string;
+    link?: string;
+    backgroundColor: string;
+    textColor: string;
+}
+
+export interface HeroSlideContent {
+    id: string;
+    title: string;
+    subtitle: string;
+    badge?: string;
+    buttonText: string;
+    buttonLink: string;
+    secondaryButtonText?: string;
+    secondaryButtonLink?: string;
+    image: string;
+    overlayOpacity?: number;
+}
+
+export interface HeroPremiumContent {
+    slides: HeroSlideContent[];
+    autoPlay: boolean;
+    autoPlayInterval: number;
+}
+
+export interface TestimonialContent {
+    id: string;
+    name: string;
+    role?: string;
+    avatar?: string;
+    content: string;
+    rating: number;
+}
+
+export interface TestimonialsContent {
+    title: string;
+    subtitle: string;
+    testimonials: TestimonialContent[];
+    backgroundColor?: string;
+}
+
+export interface TrustBadgeContent {
+    icon: "truck" | "shield" | "return" | "support";
+    title: string;
+    description: string;
+}
+
+export interface TrustBadgesContent {
+    badges: TrustBadgeContent[];
+    backgroundColor?: string;
+}
+
+export interface PromotionalBannerContent {
+    title: string;
+    subtitle: string;
+    buttonText: string;
+    buttonLink: string;
+    image?: string;
+    backgroundColor: string;
+    textColor: string;
+    badge?: string;
+    discount?: string;
+}
+
 /**
  * Get all CMS content sections
  */
@@ -480,11 +546,12 @@ export async function seedSectionColors() {
             key: 'homepage_settings',
             name: 'Homepage Design',
             defaultContent: {
-                layout: 'classic', // classic, modern, luxury
+                layout: 'premium', // Options: premium, minimal, classic, modern, luxury
                 showHero: true,
                 showCollections: true,
                 showProducts: true,
-                showNewsletter: true
+                showNewsletter: true,
+                availableLayouts: ['premium', 'minimal', 'classic', 'modern', 'luxury']
             }
         }
     ];
