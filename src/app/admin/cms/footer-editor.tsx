@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Save, Loader2, Plus, Trash2, Facebook, Instagram, Twitter, MessageCircle } from "lucide-react";
+import { Save, Loader2, Plus, Trash2, Facebook, Instagram, Twitter, MessageCircle, Palette } from "lucide-react";
 import { updateCMSContent, CMSContent, FooterContent } from "@/lib/actions/cms-actions";
 
 interface FooterEditorProps {
@@ -28,6 +28,8 @@ export function FooterEditor({ section }: FooterEditorProps) {
         quickLinks: content.quickLinks || [],
         customerService: content.customerService || [],
         contactInfo: content.contactInfo || {},
+        backgroundColor: content.backgroundColor || "#09090b",
+        textColor: content.textColor || "#d4d4d8",
     });
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -91,6 +93,53 @@ export function FooterEditor({ section }: FooterEditorProps) {
             <div className="grid gap-6 lg:grid-cols-2">
                 {/* Left Column */}
                 <div className="space-y-6">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <Palette className="h-5 w-5" /> Appearance
+                            </CardTitle>
+                            <CardDescription>
+                                Customize the footer colors.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="bgColor">Background Color</Label>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="color"
+                                        value={formData.backgroundColor}
+                                        onChange={(e) => setFormData({ ...formData, backgroundColor: e.target.value })}
+                                        className="w-12 h-10 rounded border cursor-pointer"
+                                    />
+                                    <Input
+                                        id="bgColor"
+                                        value={formData.backgroundColor}
+                                        onChange={(e) => setFormData({ ...formData, backgroundColor: e.target.value })}
+                                        className="flex-1"
+                                    />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="txtColor">Text Color</Label>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="color"
+                                        value={formData.textColor}
+                                        onChange={(e) => setFormData({ ...formData, textColor: e.target.value })}
+                                        className="w-12 h-10 rounded border cursor-pointer"
+                                    />
+                                    <Input
+                                        id="txtColor"
+                                        value={formData.textColor}
+                                        onChange={(e) => setFormData({ ...formData, textColor: e.target.value })}
+                                        className="flex-1"
+                                    />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
                     <Card>
                         <CardHeader>
                             <CardTitle>Company Info</CardTitle>

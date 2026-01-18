@@ -54,6 +54,8 @@ export interface FooterContent {
         phone?: string;
         address?: string;
     };
+    backgroundColor?: string;
+    textColor?: string;
 }
 
 export interface FeaturesContent {
