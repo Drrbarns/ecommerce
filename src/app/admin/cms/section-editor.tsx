@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Save, Loader2 } from "lucide-react";
 import { updateCMSContent, CMSContent } from "@/lib/actions/cms-actions";
@@ -81,6 +82,29 @@ export function SectionEditor({ section, onSave }: SectionEditorProps) {
         }
 
         if (typeof value === 'string') {
+            // Variant selector
+            if (key === 'variant') {
+                return (
+                    <div key={key} className="space-y-2 col-span-2">
+                        <Label htmlFor={key}>{capitalizedLabel}</Label>
+                        <Select value={(value as string) || "split"} onValueChange={(v) => updateField(key, v)}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select a design variant" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="split">Split (Classic)</SelectItem>
+                                <SelectItem value="centered">Centered (Modern)</SelectItem>
+                                <SelectItem value="minimal">Minimal (Clean)</SelectItem>
+                                <SelectItem value="fullscreen">Fullscreen (Impact)</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        <p className="text-xs text-muted-foreground">
+                            Choose the layout style for this section.
+                        </p>
+                    </div>
+                );
+            }
+
             // Long text = textarea
             if (value.length > 100 || key.includes('content') || key.includes('description')) {
                 return (

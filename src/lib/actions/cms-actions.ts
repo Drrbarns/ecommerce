@@ -20,7 +20,10 @@ export interface CMSContent {
     updated_at: string;
 }
 
+export type HeroVariant = "split" | "centered" | "minimal" | "fullscreen";
+
 export interface HeroContent {
+    variant?: HeroVariant;          // Design variant selection
     title: string;
     subtitle: string;
     badge?: string;
@@ -379,6 +382,13 @@ export async function seedSectionColors() {
     // Define the sections we want to manage colors for
     const sectionsToSeed = [
         {
+            key: 'hero',
+            name: 'Hero Section',
+            defaultContent: {
+                variant: 'split'
+            }
+        },
+        {
             key: 'featured_collections',
             name: 'Featured Collections',
             defaultContent: {
@@ -485,7 +495,7 @@ export async function seedSectionColors() {
                 is_active: true
             });
         } else {
-            // Update existing section to include color/image fields if missing
+            // Update existing section to include color/image/variant fields if missing
             const currentContent = existingSection.content as Record<string, any>;
             let needsUpdate = false;
             const updates: Record<string, any> = {};
@@ -502,6 +512,13 @@ export async function seedSectionColors() {
                 }
                 if (currentContent.backgroundImage === undefined) {
                     updates.backgroundImage = section.defaultContent.backgroundImage;
+                    needsUpdate = true;
+                }
+            }
+            // For Hero - add variant
+            if (section.key === 'hero') {
+                if (currentContent.variant === undefined) {
+                    updates.variant = 'split';
                     needsUpdate = true;
                 }
             }
