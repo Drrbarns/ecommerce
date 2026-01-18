@@ -33,10 +33,12 @@ export function HomeClassic({ data }: HomeLayoutProps) {
             <FeaturedCollections
                 collections={data.collections}
                 backgroundColor={data.collectionContent?.backgroundColor || "#FAFAFA"}
+                variant="classic"
             />
             <FeaturedProducts
                 products={data.featuredProducts}
                 backgroundColor={data.productContent?.backgroundColor || "#F3F4F6"}
+                variant="classic"
             />
             <Newsletter
                 backgroundColor={data.newsletterContent?.backgroundColor || "#1B4D3E"}
@@ -57,7 +59,7 @@ export function HomeModern({ data }: HomeLayoutProps) {
             <Hero />
 
             {/* Trending Marquee */}
-            <div className="bg-black text-white overflow-hidden py-3">
+            <div className="bg-black text-white overflow-hidden py-3 border-y-2 border-white">
                 <div className="whitespace-nowrap animate-marquee flex gap-8 font-bold tracking-widest uppercase text-sm">
                     {Array(10).fill("NEW ARRIVALS • LIMITED EDITION • WORLDWIDE SHIPPING • PREMIUM QUALITY • ").map((text, i) => (
                         <span key={i}>{text}</span>
@@ -69,6 +71,7 @@ export function HomeModern({ data }: HomeLayoutProps) {
             <FeaturedProducts
                 products={data.featuredProducts}
                 backgroundColor={data.productContent?.backgroundColor || "#FFFFFF"}
+                variant="modern"
             />
 
             {/* Newsletter Mid-page Break */}
@@ -79,10 +82,11 @@ export function HomeModern({ data }: HomeLayoutProps) {
             />
 
             {/* Collections Grid with Gap */}
-            <div className="py-12">
+            <div className="py-12 bg-white">
                 <FeaturedCollections
                     collections={data.collections}
                     backgroundColor={data.collectionContent?.backgroundColor || "#F8F8F8"}
+                    variant="modern"
                 />
             </div>
         </>
@@ -113,22 +117,15 @@ export function HomeLuxury({ data }: HomeLayoutProps) {
             <FeaturedCollections
                 collections={data.collections}
                 backgroundColor="#FFFFFF" // Force white for luxury
+                variant="luxury"
             />
 
             {/* Curated Products */}
             <section className="py-24 bg-zinc-50">
-                <div className="container mx-auto px-4 mb-16 flex justify-between items-end">
-                    <div>
-                        <span className="text-xs font-bold tracking-widest text-zinc-400 uppercase mb-2 block">Curated</span>
-                        <h3 className="font-heading text-4xl text-zinc-900">Essentials</h3>
-                    </div>
-                    <Button variant="link" className="text-zinc-900" asChild>
-                        <Link href="/shop">View All <ArrowRight className="ml-2 w-4 h-4" /></Link>
-                    </Button>
-                </div>
                 <FeaturedProducts
                     products={data.featuredProducts}
                     backgroundColor="transparent"
+                    variant="luxury"
                 />
             </section>
 
