@@ -175,6 +175,9 @@ export async function deleteProduct(productId: string) {
         return { success: false, error: error.message };
     }
 
+    // Refresh analytics cache to update views like low_stock_items
+    await supabaseUntyped.rpc('refresh_analytics_cache');
+
     revalidatePath('/admin/products');
     revalidatePath('/shop');
 
