@@ -105,6 +105,13 @@ export interface PrivacyPageContent {
     textColor?: string;
 }
 
+export interface CollectionsPageContent {
+    title: string;
+    description: string;
+    backgroundColor?: string;
+    textColor?: string;
+}
+
 export interface PromoBannerContent {
     enabled: boolean;
     text: string;
@@ -445,6 +452,16 @@ export async function seedSectionColors() {
                 title: "Privacy Policy",
                 lastUpdated: new Date().toLocaleDateString(),
                 content: "Your privacy is important to us...",
+                backgroundColor: "#FFFFFF",
+                textColor: "#18181B"
+            }
+        },
+        {
+            key: 'collections_page',
+            name: 'Collections Index Page',
+            defaultContent: {
+                title: "All Collections",
+                description: "Browse our complete range of categories.",
                 backgroundColor: "#FFFFFF",
                 textColor: "#18181B"
             }

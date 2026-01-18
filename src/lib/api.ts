@@ -58,3 +58,33 @@ export async function getCollections(): Promise<Collection[]> {
 
     return data as Collection[];
 }
+
+export async function getCollectionBySlug(slug: string): Promise<Collection | null> {
+    const { data, error } = await supabase
+        .from('collections')
+        .select('*')
+        .eq('slug', slug)
+        .single();
+
+    if (error) {
+        console.error(`Error fetching collection ${slug}:`, error);
+        return null;
+    }
+
+    return data as Collection;
+}
+
+export async function getProductsByCollection(slug: string): Promise<Product[]> {
+    // Products have a 'category' field which typically stores the collection slug
+    const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('category', slug);
+
+    if (error) {
+        console.error('Error fetching products by collection:', error);
+        return [];
+    }
+
+    return data as Product[];
+}
