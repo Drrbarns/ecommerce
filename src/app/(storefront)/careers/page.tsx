@@ -13,11 +13,13 @@ export default function CareersPage() {
     return (
         <section className="py-12">
             <Container>
-                <Heading
-                    title="Careers at Moolre"
-                    description="Join our mission to revolutionize e-commerce in Africa."
-                    className="mb-12 text-center"
-                />
+                <div className="text-center mb-12">
+                    <Heading
+                        title="Careers at Moolre"
+                        description="Join our mission to revolutionize e-commerce in Africa."
+                        align="center"
+                    />
+                </div>
 
                 <div className="max-w-3xl mx-auto">
                     <div className="text-center py-16 px-6 rounded-2xl border bg-muted/30">

@@ -38,11 +38,13 @@ export default function ShippingPage() {
     return (
         <section className="py-12">
             <Container>
-                <Heading
-                    title="Shipping Information"
-                    description="Everything you need to know about getting your order delivered."
-                    className="mb-12 text-center"
-                />
+                <div className="text-center mb-12">
+                    <Heading
+                        title="Shipping Information"
+                        description="Everything you need to know about getting your order delivered."
+                        align="center"
+                    />
+                </div>
 
                 <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
                     {shippingInfo.map((item, index) => (

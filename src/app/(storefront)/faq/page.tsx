@@ -38,11 +38,13 @@ export default function FAQPage() {
     return (
         <section className="py-12">
             <Container>
-                <Heading
-                    title="Frequently Asked Questions"
-                    description="Find answers to common questions about our products and services."
-                    className="mb-12 text-center"
-                />
+                <div className="text-center mb-12">
+                    <Heading
+                        title="Frequently Asked Questions"
+                        description="Find answers to common questions about our products and services."
+                        align="center"
+                    />
+                </div>
 
                 <Accordion type="single" collapsible className="max-w-3xl mx-auto">
                     {faqs.map((faq, index) => (

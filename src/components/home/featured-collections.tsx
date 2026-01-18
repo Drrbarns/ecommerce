@@ -27,7 +27,7 @@ export function FeaturedCollections({ collections, backgroundColor, variant = 'c
                     title={variant === 'luxury' ? "The Collections" : "Curated Collections"}
                     description={variant === 'luxury' ? undefined : "Explore our thoughtfully designed categories."}
                     className="mb-0"
-                    centered={variant === 'luxury'}
+                    align={variant === 'luxury' ? "center" : "left"}
                 />
                 {variant !== 'luxury' && (
                     <Button variant="ghost" className="hidden md:flex gap-2 group" asChild>

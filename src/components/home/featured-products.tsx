@@ -25,7 +25,7 @@ export function FeaturedProducts({ products, backgroundColor, variant = 'classic
                     title={variant === 'modern' ? "FRESH DROPS" : variant === 'luxury' ? "The Essentials" : "Trending Essentials"}
                     description={variant === 'luxury' ? undefined : "Our most coveted pieces, loved by the community."}
                     className="mb-0 text-left"
-                    centered={variant === 'luxury'}
+                    align={variant === 'luxury' ? "center" : "left"}
                 />
 
                 {variant !== 'luxury' && (

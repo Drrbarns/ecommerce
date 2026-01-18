@@ -33,6 +33,7 @@ export default async function ContactPage() {
                     <Heading
                         title={data.title}
                         description={data.subtitle}
+                        align="center"
                     />
                 </div>
 

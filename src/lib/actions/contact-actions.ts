@@ -21,7 +21,7 @@ export async function submitContactForm(formData: FormData) {
     if (!result.success) {
         return {
             success: false,
-            error: result.error.errors[0]?.message || "Invalid input"
+            error: result.error.issues[0]?.message || "Invalid input"
         };
     }
 
@@ -36,7 +36,7 @@ export async function submitContactForm(formData: FormData) {
                 email,
                 message,
                 status: "new",
-            });
+            } as any);
 
         if (dbError) {
             console.error("Failed to store contact submission:", dbError);

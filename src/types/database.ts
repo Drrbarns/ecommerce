@@ -327,6 +327,27 @@ export interface Database {
                 Insert: Omit<Database['public']['Tables']['reviews']['Row'], 'id' | 'created_at' | 'updated_at'>;
                 Update: Partial<Database['public']['Tables']['reviews']['Insert']>;
             };
+            contact_submissions: {
+                Row: {
+                    id: string;
+                    created_at: string;
+                    name: string;
+                    email: string;
+                    message: string;
+                    status: string;
+                    notes: string | null;
+                };
+                Insert: {
+                    id?: string;
+                    created_at?: string;
+                    name: string;
+                    email: string;
+                    message: string;
+                    status?: string;
+                    notes?: string | null;
+                };
+                Update: Partial<Database['public']['Tables']['contact_submissions']['Insert']>;
+            };
         };
         Functions: {
             validate_coupon: {
@@ -366,3 +387,4 @@ export type StoreSettings = Tables['store_settings']['Row'];
 export type StaffMember = Tables['staff_members']['Row'];
 export type AuditLog = Tables['audit_logs']['Row'];
 export type Review = Tables['reviews']['Row'];
+export type ContactSubmission = Tables['contact_submissions']['Row'];

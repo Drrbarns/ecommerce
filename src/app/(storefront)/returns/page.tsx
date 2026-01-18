@@ -11,11 +11,13 @@ export default function ReturnsPage() {
     return (
         <section className="py-12">
             <Container>
-                <Heading
-                    title="Returns & Refunds"
-                    description="We want you to love your purchase. If not, here's how we can help."
-                    className="mb-12 text-center"
-                />
+                <div className="text-center mb-12">
+                    <Heading
+                        title="Returns & Refunds"
+                        description="We want you to love your purchase. If not, here's how we can help."
+                        align="center"
+                    />
+                </div>
 
                 <div className="max-w-3xl mx-auto space-y-12">
                     {/* Return Policy Overview */}
