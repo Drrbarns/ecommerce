@@ -17,7 +17,11 @@ import {
     Award,
     Megaphone,
     Palette,
-    Loader2
+    Loader2,
+    User,
+    MessageSquare,
+    FileText,
+    Shield
 } from "lucide-react";
 import { toggleCMSContentActive, seedSectionColors, CMSContent } from "@/lib/actions/cms-actions";
 import { SectionEditor } from "./section-editor";
@@ -31,6 +35,10 @@ const sectionIcons: Record<string, React.ElementType> = {
     promo_banner: Megaphone,
     newsletter_section: Bell,
     about_section: Layout,
+    about_page: User,
+    contact_page: MessageSquare,
+    terms_page: FileText,
+    privacy_page: Shield,
     trust_badges: Award,
     featured_collections: Layout,
     featured_products: Sparkles
@@ -93,7 +101,7 @@ export function ContentSectionsList({ sections }: ContentSectionsListProps) {
                         ) : (
                             <Palette className="mr-2 h-4 w-4" />
                         )}
-                        Initialize Colors
+                        Initialize Sections
                     </Button>
                 </CardHeader>
                 <CardContent className="divide-y pt-4">

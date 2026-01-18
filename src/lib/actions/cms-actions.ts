@@ -68,6 +68,43 @@ export interface FeaturesContent {
     }>;
 }
 
+export interface AboutPageContent {
+    title: string;
+    description: string;
+    storyTitle: string;
+    storyContent: string;
+    image?: string;
+    backgroundColor?: string;
+    textColor?: string;
+}
+
+export interface ContactPageContent {
+    title: string;
+    subtitle: string;
+    email: string;
+    phone: string;
+    address: string;
+    hours: string;
+    backgroundColor?: string;
+    textColor?: string;
+}
+
+export interface TermsPageContent {
+    title: string;
+    lastUpdated: string;
+    content: string;
+    backgroundColor?: string;
+    textColor?: string;
+}
+
+export interface PrivacyPageContent {
+    title: string;
+    lastUpdated: string;
+    content: string;
+    backgroundColor?: string;
+    textColor?: string;
+}
+
 export interface PromoBannerContent {
     enabled: boolean;
     text: string;
@@ -361,6 +398,55 @@ export async function seedSectionColors() {
                 backgroundColor: "#1B4D3E", // Brand Primary (fallback color)
                 backgroundImage: "", // Optional background image URL
                 textColor: "#FFFFFF"
+            }
+        },
+        {
+            key: 'about_page',
+            name: 'About Us Page',
+            defaultContent: {
+                title: "About U's",
+                description: "We are building the future of commerce.",
+                storyTitle: "Our Story",
+                storyContent: "Moolre Commerce started with a simple idea: premium quality should be accessible.",
+                image: "",
+                backgroundColor: "#FFFFFF",
+                textColor: "#18181B"
+            }
+        },
+        {
+            key: 'contact_page',
+            name: 'Contact Page',
+            defaultContent: {
+                title: "Contact Us",
+                subtitle: "We'd love to hear from you. Get in touch with us.",
+                email: "support@moolre.com",
+                phone: "+1 (555) 123-4567",
+                address: "123 Commerce St, Tech City, TC 90210",
+                hours: "Mon-Fri: 9am - 5pm EST",
+                backgroundColor: "#FFFFFF",
+                textColor: "#18181B"
+            }
+        },
+        {
+            key: 'terms_page',
+            name: 'Terms of Service Page',
+            defaultContent: {
+                title: "Terms of Service",
+                lastUpdated: new Date().toLocaleDateString(),
+                content: "These are the terms of service...",
+                backgroundColor: "#FFFFFF",
+                textColor: "#18181B"
+            }
+        },
+        {
+            key: 'privacy_page',
+            name: 'Privacy Policy Page',
+            defaultContent: {
+                title: "Privacy Policy",
+                lastUpdated: new Date().toLocaleDateString(),
+                content: "Your privacy is important to us...",
+                backgroundColor: "#FFFFFF",
+                textColor: "#18181B"
             }
         }
     ];
