@@ -5,8 +5,6 @@ import { ProductGallery } from "@/components/product/product-gallery";
 import { ProductInfo } from "@/components/product/product-info";
 import { ProductCard } from "@/components/shared/product-card";
 import { Heading } from "@/components/shared/heading";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { getProductBySlug, getProducts } from "@/lib/api";
 
 interface ProductPageProps {
@@ -53,32 +51,28 @@ export default async function ProductPage({ params }: ProductPageProps) {
         .slice(0, 4);
 
     return (
-        <div className="flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-1 py-12">
-                <Container>
-                    {/* Breadcrumb could go here */}
+        <section className="py-12">
+            <Container>
+                {/* Breadcrumb could go here */}
 
-                    <div className="grid gap-10 lg:grid-cols-2 lg:gap-20">
-                        <ProductGallery product={product} />
-                        <ProductInfo product={product} />
-                    </div>
+                <div className="grid gap-10 lg:grid-cols-2 lg:gap-20">
+                    <ProductGallery product={product} />
+                    <ProductInfo product={product} />
+                </div>
 
-                    {/* Related Products */}
-                    <div className="mt-24">
-                        <Heading
-                            title="You May Also Like"
-                            className="mb-10"
-                        />
-                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                            {relatedProducts.map((related) => (
-                                <ProductCard key={related.id} product={related} />
-                            ))}
-                        </div>
+                {/* Related Products */}
+                <div className="mt-24">
+                    <Heading
+                        title="You May Also Like"
+                        className="mb-10"
+                    />
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                        {relatedProducts.map((related) => (
+                            <ProductCard key={related.id} product={related} />
+                        ))}
                     </div>
-                </Container>
-            </main>
-            <Footer />
-        </div>
+                </div>
+            </Container>
+        </section>
     );
 }
