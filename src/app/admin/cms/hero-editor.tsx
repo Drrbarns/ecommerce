@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SingleImageUpload } from "@/components/admin/single-image-upload";
 import { toast } from "sonner";
 import { Save, Loader2, Eye } from "lucide-react";
@@ -23,6 +24,7 @@ export function HeroEditor({ section }: HeroEditorProps) {
     const [isLoading, setIsLoading] = useState(false);
 
     const [formData, setFormData] = useState<HeroContent>({
+        variant: content.variant || "split",
         title: content.title || "",
         subtitle: content.subtitle || "",
         badge: content.badge || "",
@@ -59,6 +61,34 @@ export function HeroEditor({ section }: HeroEditorProps) {
             <div className="grid gap-6 lg:grid-cols-2">
                 {/* Left Column - Text Content */}
                 <div className="space-y-6">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Design Style</CardTitle>
+                            <CardDescription>
+                                Choose the layout for your hero section.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2">
+                                <Label htmlFor="variant">Layout Variant</Label>
+                                <Select
+                                    value={formData.variant || "split"}
+                                    onValueChange={(v: any) => setFormData({ ...formData, variant: v })}
+                                >
+                                    <SelectTrigger id="variant">
+                                        <SelectValue placeholder="Select a design variant" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="split">Split (Classic)</SelectItem>
+                                        <SelectItem value="centered">Centered (Modern)</SelectItem>
+                                        <SelectItem value="minimal">Minimal (Clean)</SelectItem>
+                                        <SelectItem value="fullscreen">Fullscreen (Impact)</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </CardContent>
+                    </Card>
+
                     <Card>
                         <CardHeader>
                             <CardTitle>Hero Text</CardTitle>
