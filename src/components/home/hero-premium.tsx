@@ -28,43 +28,7 @@ interface HeroPremiumProps {
     autoPlayInterval?: number;
 }
 
-const defaultSlides: HeroSlide[] = [
-    {
-        id: "1",
-        title: "Discover\nPremium\nQuality Products",
-        subtitle: "Shop the latest collection of handpicked items, crafted with care and delivered with love to your doorstep.",
-        badge: "New Collection",
-        buttonText: "Shop Now",
-        buttonLink: "/shop",
-        secondaryButtonText: "Watch Video",
-        secondaryButtonLink: "#",
-        image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2070&auto=format&fit=crop",
-        overlayOpacity: 0.4,
-        textPosition: "left"
-    },
-    {
-        id: "2",
-        title: "Summer\nEssentials\nAre Here",
-        subtitle: "Explore our curated selection of summer must-haves. Limited edition pieces you won't find anywhere else.",
-        badge: "Limited Edition",
-        buttonText: "Explore Collection",
-        buttonLink: "/collections/summer",
-        image: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2070&auto=format&fit=crop",
-        overlayOpacity: 0.5,
-        textPosition: "left"
-    },
-    {
-        id: "3",
-        title: "Elevate\nYour\nEveryday Style",
-        subtitle: "Premium accessories designed for the modern lifestyle. Quality that speaks for itself.",
-        badge: "Bestsellers",
-        buttonText: "Shop Accessories",
-        buttonLink: "/collections/accessories",
-        image: "https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=2071&auto=format&fit=crop",
-        overlayOpacity: 0.45,
-        textPosition: "left"
-    }
-];
+const defaultSlides: HeroSlide[] = [];
 
 export function HeroPremium({
     slides = defaultSlides,
@@ -75,20 +39,38 @@ export function HeroPremium({
     const [direction, setDirection] = useState(0);
 
     const next = () => {
+        if (!slides.length) return;
         setDirection(1);
         setCurrent((prev) => (prev + 1) % slides.length);
     };
 
     const prev = () => {
+        if (!slides.length) return;
         setDirection(-1);
         setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
     };
 
     useEffect(() => {
-        if (!autoPlay) return;
+        if (!autoPlay || slides.length <= 1) return;
         const timer = setInterval(next, autoPlayInterval);
         return () => clearInterval(timer);
-    }, [autoPlay, autoPlayInterval]);
+    }, [autoPlay, autoPlayInterval, slides.length]);
+
+    if (!slides || slides.length === 0) {
+        return (
+            <section className="relative w-full h-[60vh] md:h-[80vh] bg-neutral-900 flex items-center justify-center overflow-hidden">
+                <div className="text-center px-4">
+                    <h2 className="text-2xl md:text-4xl font-bold text-white mb-4">Welcome to Moolre</h2>
+                    <p className="text-neutral-400 max-w-lg mx-auto mb-8">
+                        The hero slider is currently empty. Please configure your slides in the Admin CMS to showcase your products.
+                    </p>
+                    <Link href="/shop">
+                        <Button size="lg" className="rounded-full">Start Shopping</Button>
+                    </Link>
+                </div>
+            </section>
+        );
+    }
 
     const slideVariants = {
         enter: (direction: number) => ({
@@ -114,7 +96,9 @@ export function HeroPremium({
         })
     };
 
-    const currentSlide = slides[current];
+    // Safe access
+    const currentSlide = slides[current] || slides[0];
+    if (!currentSlide) return null;
 
     return (
         <section className="relative w-full h-[85vh] md:h-[90vh] overflow-hidden bg-black">
