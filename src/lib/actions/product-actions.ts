@@ -160,9 +160,14 @@ export async function updateProduct(productId: string, input: Partial<CreateProd
  * Delete a product
  */
 export async function deleteProduct(productId: string) {
+    // Soft delete: Archive the product instead of removing row to preserve order history
     const { error } = await supabaseUntyped
         .from('products')
-        .delete()
+        .update({
+            status: 'archived',
+            is_active: false,
+            updated_at: new Date().toISOString()
+        })
         .eq('id', productId);
 
     if (error) {

@@ -6,6 +6,7 @@ export async function getProducts(): Promise<Product[]> {
     const { data, error } = await supabase
         .from('products')
         .select('*')
+        .neq('status', 'archived')
         .order('created_at', { ascending: false });
 
     if (error) {
@@ -20,6 +21,7 @@ export async function getFeaturedProducts(): Promise<Product[]> {
     const { data, error } = await supabase
         .from('products')
         .select('*')
+        .neq('status', 'archived')
         .order('created_at', { ascending: false })
         .limit(4);
 
@@ -36,6 +38,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
         .from('products')
         .select('*')
         .eq('slug', slug)
+        .neq('status', 'archived')
         .single();
 
     if (error) {
@@ -96,7 +99,8 @@ export async function getProductsByCollection(slug: string): Promise<Product[]> 
     const { data, error } = await supabase
         .from('products')
         .select('*')
-        .eq('category', slug);
+        .eq('category', slug)
+        .neq('status', 'archived');
 
     if (error) {
         console.error('Error fetching products by collection:', error);
