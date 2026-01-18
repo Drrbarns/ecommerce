@@ -5,8 +5,10 @@ import { Heading } from "@/components/shared/heading";
 import { ProductCard } from "@/components/shared/product-card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Product } from "@/types";
+import { cn } from "@/lib/utils";
 
 interface FeaturedProductsProps {
     products: Product[];

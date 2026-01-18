@@ -1,6 +1,7 @@
 import { Container } from "@/components/shared/container";
 import { Heading } from "@/components/shared/heading";
 import { getCMSContent, ContactPageContent } from "@/lib/actions/cms-actions";
+import { ContactForm } from "@/components/contact/contact-form";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 
 export const metadata = {
@@ -83,26 +84,10 @@ export default async function ContactPage() {
                         </div>
                     </div>
 
-                    {/* Contact Form Placeholder */}
+                    {/* Contact Form */}
                     <div className="rounded-2xl border bg-card p-8 shadow-sm text-card-foreground">
                         <h3 className="text-xl font-bold mb-6">Send us a message</h3>
-                        <form className="space-y-4">
-                            <div className="grid gap-2">
-                                <label htmlFor="name" className="text-sm font-medium">Name</label>
-                                <input type="text" id="name" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" placeholder="Your name" />
-                            </div>
-                            <div className="grid gap-2">
-                                <label htmlFor="email" className="text-sm font-medium">Email</label>
-                                <input type="email" id="email" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" placeholder="name@example.com" />
-                            </div>
-                            <div className="grid gap-2">
-                                <label htmlFor="message" className="text-sm font-medium">Message</label>
-                                <textarea id="message" className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" placeholder="How can we help you?" />
-                            </div>
-                            <button type="submit" className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full">
-                                Send Message
-                            </button>
-                        </form>
+                        <ContactForm />
                     </div>
                 </div>
             </Container>
