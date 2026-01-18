@@ -192,54 +192,64 @@ export function HeroCentered({ hero }: HeroVariantProps) {
  * Minimal Hero - Clean, simple design with subtle animations
  */
 export function HeroMinimal({ hero }: HeroVariantProps) {
+    // Smart color inversion: If text is white (likely from dark theme), force it to dark for this light-themed variant
+    const isWhite = (color?: string) => !color || color.toLowerCase() === '#ffffff' || color.toLowerCase() === '#fff';
+
+    const titleColor = isWhite(hero.textColor) ? '#18181B' : hero.textColor; // Default to Zinc-950 if white
+    const subtitleColor = (!hero.subtitleColor || hero.subtitleColor === '#a1a1aa') ? '#52525B' : hero.subtitleColor; // Default to Zinc-600 if gray-400
+
     return (
         <section
-            className="w-full min-h-[70vh] flex items-center"
+            className="w-full min-h-[75vh] flex items-center relative overflow-hidden"
             style={{ backgroundColor: hero.backgroundColor || '#FFFFFF' }}
         >
-            <div className="max-w-7xl mx-auto px-6 py-20 md:py-32 grid md:grid-cols-2 gap-12 items-center">
+            {/* Decorative Background Elements */}
+            <div className="absolute top-0 right-0 w-1/3 h-full bg-slate-50/50 -skew-x-12 translate-x-1/4" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
+
+            <div className="max-w-[1440px] mx-auto px-6 py-20 md:py-32 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center relative z-10">
                 {/* Text Content */}
-                <div>
+                <div className="flex flex-col items-start text-left order-2 lg:order-1">
                     {hero.badge && (
                         <span
-                            className="inline-block text-sm font-semibold tracking-wider uppercase mb-4"
-                            style={{ color: hero.subtitleColor || '#6b7280' }}
+                            className="inline-block text-xs font-bold tracking-widest uppercase mb-6 px-3 py-1 bg-zinc-100 text-zinc-900 rounded-sm"
                         >
                             {hero.badge}
                         </span>
                     )}
 
                     <h1
-                        className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight"
-                        style={{ color: hero.textColor || '#18181b' }}
+                        className="font-heading text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.1]"
+                        style={{ color: titleColor }}
                     >
                         {hero.title}
                     </h1>
 
                     <p
-                        className="mt-6 text-lg max-w-lg"
-                        style={{ color: hero.subtitleColor || '#52525b' }}
+                        className="mt-8 text-lg leading-relaxed max-w-lg"
+                        style={{ color: subtitleColor }}
                     >
                         {hero.subtitle}
                     </p>
 
-                    <div className="mt-8 flex flex-wrap gap-4">
+                    <div className="mt-10 flex flex-wrap gap-4">
                         {hero.primaryButtonText && (
                             <Button
                                 size="lg"
-                                className="h-12 rounded-full px-8 text-base font-semibold"
+                                className="h-14 rounded-full px-8 text-base font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
                                 asChild
                             >
                                 <Link href={hero.primaryButtonLink || "/shop"}>
-                                    {hero.primaryButtonText} <ArrowRight className="ml-2 h-4 w-4" />
+                                    {hero.primaryButtonText} <ArrowRight className="ml-2 h-5 w-5" />
                                 </Link>
                             </Button>
                         )}
                         {hero.secondaryButtonText && (
                             <Button
                                 size="lg"
-                                variant="ghost"
-                                className="h-12 px-8 text-base font-semibold"
+                                variant="outline"
+                                className="h-14 rounded-full px-8 text-base font-semibold border-2 hover:bg-zinc-50"
+                                style={{ borderColor: isWhite(hero.textColor) ? '#e4e4e7' : 'currentColor', color: titleColor }}
                                 asChild
                             >
                                 <Link href={hero.secondaryButtonLink || "/about"}>
@@ -251,18 +261,27 @@ export function HeroMinimal({ hero }: HeroVariantProps) {
                 </div>
 
                 {/* Image */}
-                <div className="relative aspect-square md:aspect-[4/5] rounded-3xl overflow-hidden bg-muted">
-                    {hero.backgroundImage ? (
-                        <Image
-                            src={hero.backgroundImage}
-                            alt="Hero Image"
-                            fill
-                            className="object-cover"
-                            priority
-                        />
-                    ) : (
-                        <div className="h-full w-full bg-gradient-to-br from-primary/10 to-primary/5" />
-                    )}
+                <div className="relative order-1 lg:order-2">
+                    <div className="relative aspect-[4/5] md:aspect-square lg:aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl">
+                        {hero.backgroundImage ? (
+                            <Image
+                                src={hero.backgroundImage}
+                                alt="Hero Image"
+                                fill
+                                className="object-cover hover:scale-105 transition-transform duration-700"
+                                priority
+                            />
+                        ) : (
+                            <div className="h-full w-full bg-zinc-100 flex items-center justify-center text-zinc-300">
+                                No Image Selected
+                            </div>
+                        )}
+                        {/* Inner shadow for depth */}
+                        <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-[2rem]" />
+                    </div>
+
+                    {/* Floating elements effect */}
+                    <div className="absolute -bottom-6 -left-6 -z-10 w-full h-full border-2 border-primary/20 rounded-[2rem]" />
                 </div>
             </div>
         </section>
