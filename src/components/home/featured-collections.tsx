@@ -13,11 +13,12 @@ import { Collection } from "@/types";
 
 interface FeaturedCollectionsProps {
     collections: Collection[];
+    backgroundColor?: string;
 }
 
-export function FeaturedCollections({ collections }: FeaturedCollectionsProps) {
+export function FeaturedCollections({ collections, backgroundColor }: FeaturedCollectionsProps) {
     return (
-        <Section grid className="py-24 bg-zinc-50/50 dark:bg-zinc-950/50">
+        <Section grid className="py-24" style={{ backgroundColor: backgroundColor || undefined }}>
             <div className="flex items-end justify-between mb-12">
                 <Heading
                     title="Curated Collections"

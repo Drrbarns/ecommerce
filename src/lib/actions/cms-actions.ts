@@ -103,7 +103,7 @@ export async function getCMSContent<T>(sectionKey: string): Promise<T | null> {
         .single();
 
     if (error) {
-        console.error(`Error fetching CMS content for ${sectionKey}:`, error);
+        // Not finding content happens often if section is disabled or missing
         return null;
     }
 
@@ -317,6 +317,92 @@ export async function resetHeroDesignToDefaults() {
     if (error) {
         console.error("Error resetting hero design:", error);
         return { success: false, error: error.message };
+    }
+
+    revalidatePath("/");
+    revalidatePath("/admin/cms");
+
+    return { success: true };
+}
+
+/**
+ * Seed background color fields for sections
+ * This ensures all sections have the necessary fields for color customization
+ */
+export async function seedSectionColors() {
+    // Define the sections we want to manage colors for
+    const sectionsToSeed = [
+        {
+            key: 'featured_collections',
+            name: 'Featured Collections',
+            defaultContent: {
+                title: "Curated Collections",
+                description: "Explore our thoughtfully designed categories for every aspect of your life.",
+                backgroundColor: "#FAFAFA" // Zinc 50
+            }
+        },
+        {
+            key: 'featured_products',
+            name: 'Featured Products',
+            defaultContent: {
+                title: "Trending Essentials",
+                description: "Our most coveted pieces, loved by the community.",
+                backgroundColor: "#F3F4F6" // Zinc 100
+            }
+        },
+        {
+            key: 'newsletter_section',
+            name: 'Newsletter',
+            defaultContent: {
+                title: "Join Our Newsletter",
+                description: "Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.",
+                backgroundColor: "#1B4D3E", // Brand Primary
+                textColor: "#FFFFFF"
+            }
+        }
+    ];
+
+    for (const section of sectionsToSeed) {
+        // Check if section exists
+        const { data: existingSection } = await supabase
+            .from('cms_content')
+            .select('*')
+            .eq('section_key', section.key)
+            .single();
+
+        if (!existingSection) {
+            // Create the section if it doesn't exist
+            await supabase.from('cms_content').insert({
+                section_key: section.key,
+                section_name: section.name,
+                content: section.defaultContent,
+                is_active: true
+            });
+        } else {
+            // Update existing section to include color fields if missing
+            const currentContent = existingSection.content as Record<string, any>;
+            let needsUpdate = false;
+            const updates: Record<string, any> = {};
+
+            if (!currentContent.backgroundColor && section.defaultContent.backgroundColor) {
+                updates.backgroundColor = section.defaultContent.backgroundColor;
+                needsUpdate = true;
+            }
+            // For newsletter specifically
+            if (section.key === 'newsletter_section' && !currentContent.textColor && section.defaultContent.textColor) {
+                updates.textColor = section.defaultContent.textColor;
+                needsUpdate = true;
+            }
+
+            if (needsUpdate) {
+                await supabase
+                    .from('cms_content')
+                    .update({
+                        content: { ...currentContent, ...updates }
+                    })
+                    .eq('section_key', section.key);
+            }
+        }
     }
 
     revalidatePath("/");

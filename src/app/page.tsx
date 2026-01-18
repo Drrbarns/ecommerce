@@ -7,11 +7,14 @@ import { FooterWithCMS } from "@/components/layout/footer-with-cms";
 import { CMSThemeProvider } from "@/components/shared/cms-theme-provider";
 
 import { getFeaturedProducts, getCollections } from "@/lib/api";
+import { getCMSContent } from "@/lib/actions/cms-actions";
 
 export default async function Home() {
-  const [featuredProducts, collections] = await Promise.all([
+  const [featuredProducts, collections, collectionContent, productContent] = await Promise.all([
     getFeaturedProducts(),
     getCollections(),
+    getCMSContent<{ backgroundColor?: string }>("featured_collections"),
+    getCMSContent<{ backgroundColor?: string }>("featured_products"),
   ]);
 
   return (
@@ -20,8 +23,14 @@ export default async function Home() {
         <Header />
         <main className="flex-1">
           <Hero />
-          <FeaturedCollections collections={collections} />
-          <FeaturedProducts products={featuredProducts} />
+          <FeaturedCollections
+            collections={collections}
+            backgroundColor={collectionContent?.backgroundColor || "#FAFAFA"}
+          />
+          <FeaturedProducts
+            products={featuredProducts}
+            backgroundColor={productContent?.backgroundColor || "#F3F4F6"}
+          />
           <Newsletter />
         </main>
         <FooterWithCMS />

@@ -15,9 +15,11 @@ import {
     Layout,
     Bell,
     Award,
-    Megaphone
+    Megaphone,
+    Palette,
+    Loader2
 } from "lucide-react";
-import { toggleCMSContentActive, CMSContent } from "@/lib/actions/cms-actions";
+import { toggleCMSContentActive, seedSectionColors, CMSContent } from "@/lib/actions/cms-actions";
 import { SectionEditor } from "./section-editor";
 
 interface ContentSectionsListProps {
@@ -30,12 +32,15 @@ const sectionIcons: Record<string, React.ElementType> = {
     newsletter_section: Bell,
     about_section: Layout,
     trust_badges: Award,
+    featured_collections: Layout,
+    featured_products: Sparkles
 };
 
 export function ContentSectionsList({ sections }: ContentSectionsListProps) {
     const router = useRouter();
     const [expandedSection, setExpandedSection] = useState<string | null>(null);
     const [loadingToggle, setLoadingToggle] = useState<string | null>(null);
+    const [isSeeding, setIsSeeding] = useState(false);
 
     const handleToggleActive = async (section: CMSContent) => {
         setLoadingToggle(section.section_key);
@@ -50,6 +55,19 @@ export function ContentSectionsList({ sections }: ContentSectionsListProps) {
         }
     };
 
+    const handleSeedColors = async () => {
+        setIsSeeding(true);
+        const result = await seedSectionColors();
+        setIsSeeding(false);
+
+        if (result.success) {
+            toast.success("Section color controls initialized!");
+            router.refresh();
+        } else {
+            toast.error("Failed to initialize colors");
+        }
+    };
+
     const toggleExpand = (key: string) => {
         setExpandedSection(expandedSection === key ? null : key);
     };
@@ -57,17 +75,37 @@ export function ContentSectionsList({ sections }: ContentSectionsListProps) {
     return (
         <div className="space-y-4">
             <Card>
-                <CardHeader>
-                    <CardTitle>Homepage Sections</CardTitle>
-                    <CardDescription>
-                        Enable, disable, and customize content sections on your homepage.
-                    </CardDescription>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <div className="space-y-1">
+                        <CardTitle>Homepage Sections</CardTitle>
+                        <CardDescription>
+                            Enable, disable, and customize content sections on your homepage.
+                        </CardDescription>
+                    </div>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleSeedColors}
+                        disabled={isSeeding}
+                    >
+                        {isSeeding ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                            <Palette className="mr-2 h-4 w-4" />
+                        )}
+                        Initialize Colors
+                    </Button>
                 </CardHeader>
-                <CardContent className="divide-y">
+                <CardContent className="divide-y pt-4">
                     {sections.length === 0 ? (
-                        <p className="text-center text-muted-foreground py-8">
-                            No content sections found. Please run the CMS migration.
-                        </p>
+                        <div className="text-center py-8 space-y-4">
+                            <p className="text-muted-foreground">
+                                No content sections found. Initialize them to start customizing.
+                            </p>
+                            <Button onClick={handleSeedColors} disabled={isSeeding}>
+                                {isSeeding ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Initialize Sections"}
+                            </Button>
+                        </div>
                     ) : (
                         sections.map((section) => {
                             const Icon = sectionIcons[section.section_key] || Layout;
