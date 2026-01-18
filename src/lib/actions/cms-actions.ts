@@ -356,7 +356,8 @@ export async function seedSectionColors() {
             defaultContent: {
                 title: "Join Our Newsletter",
                 description: "Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.",
-                backgroundColor: "#1B4D3E", // Brand Primary
+                backgroundColor: "#1B4D3E", // Brand Primary (fallback color)
+                backgroundImage: "", // Optional background image URL
                 textColor: "#FFFFFF"
             }
         }
@@ -379,19 +380,25 @@ export async function seedSectionColors() {
                 is_active: true
             });
         } else {
-            // Update existing section to include color fields if missing
+            // Update existing section to include color/image fields if missing
             const currentContent = existingSection.content as Record<string, any>;
             let needsUpdate = false;
             const updates: Record<string, any> = {};
 
-            if (!currentContent.backgroundColor && section.defaultContent.backgroundColor) {
+            if (currentContent.backgroundColor === undefined && section.defaultContent.backgroundColor) {
                 updates.backgroundColor = section.defaultContent.backgroundColor;
                 needsUpdate = true;
             }
-            // For newsletter specifically
-            if (section.key === 'newsletter_section' && !currentContent.textColor && section.defaultContent.textColor) {
-                updates.textColor = section.defaultContent.textColor;
-                needsUpdate = true;
+            // For newsletter specifically - add backgroundImage and textColor
+            if (section.key === 'newsletter_section') {
+                if (currentContent.textColor === undefined && section.defaultContent.textColor) {
+                    updates.textColor = section.defaultContent.textColor;
+                    needsUpdate = true;
+                }
+                if (currentContent.backgroundImage === undefined) {
+                    updates.backgroundImage = section.defaultContent.backgroundImage;
+                    needsUpdate = true;
+                }
             }
 
             if (needsUpdate) {

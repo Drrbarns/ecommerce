@@ -118,6 +118,36 @@ export function SectionEditor({ section, onSave }: SectionEditorProps) {
                 );
             }
 
+            // Image URL input with preview
+            if (key.includes('image') || key.includes('Image')) {
+                return (
+                    <div key={key} className="space-y-2">
+                        <Label htmlFor={key}>{capitalizedLabel}</Label>
+                        <Input
+                            id={key}
+                            value={value}
+                            onChange={(e) => updateField(key, e.target.value)}
+                            placeholder="Enter image URL (e.g., https://example.com/image.jpg)"
+                        />
+                        {value && (
+                            <div className="relative w-full h-32 rounded-lg overflow-hidden bg-muted">
+                                <img
+                                    src={value}
+                                    alt="Preview"
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                        (e.target as HTMLImageElement).style.display = 'none';
+                                    }}
+                                />
+                            </div>
+                        )}
+                        <p className="text-xs text-muted-foreground">
+                            Leave empty to use the background color instead.
+                        </p>
+                    </div>
+                );
+            }
+
             // Regular input
             return (
                 <div key={key} className="space-y-2">

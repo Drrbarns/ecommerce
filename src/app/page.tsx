@@ -9,12 +9,19 @@ import { CMSThemeProvider } from "@/components/shared/cms-theme-provider";
 import { getFeaturedProducts, getCollections } from "@/lib/api";
 import { getCMSContent } from "@/lib/actions/cms-actions";
 
+interface SectionContent {
+  backgroundColor?: string;
+  backgroundImage?: string;
+  textColor?: string;
+}
+
 export default async function Home() {
-  const [featuredProducts, collections, collectionContent, productContent] = await Promise.all([
+  const [featuredProducts, collections, collectionContent, productContent, newsletterContent] = await Promise.all([
     getFeaturedProducts(),
     getCollections(),
-    getCMSContent<{ backgroundColor?: string }>("featured_collections"),
-    getCMSContent<{ backgroundColor?: string }>("featured_products"),
+    getCMSContent<SectionContent>("featured_collections"),
+    getCMSContent<SectionContent>("featured_products"),
+    getCMSContent<SectionContent>("newsletter_section"),
   ]);
 
   return (
@@ -31,7 +38,11 @@ export default async function Home() {
             products={featuredProducts}
             backgroundColor={productContent?.backgroundColor || "#F3F4F6"}
           />
-          <Newsletter />
+          <Newsletter
+            backgroundColor={newsletterContent?.backgroundColor || "#1B4D3E"}
+            backgroundImage={newsletterContent?.backgroundImage}
+            textColor={newsletterContent?.textColor}
+          />
         </main>
         <FooterWithCMS />
       </div>
