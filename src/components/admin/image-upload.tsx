@@ -35,9 +35,9 @@ export function ImageUpload({ onImagesChange, maxImages = 5, currentImages = [] 
                     return null;
                 }
 
-                // Validate file size (5MB max)
-                if (file.size > 5 * 1024 * 1024) {
-                    toast.error(`${file.name} is too large (max 5MB)`);
+                // Validate file size (4MB max to fit Vercel server action limit)
+                if (file.size > 4 * 1024 * 1024) {
+                    toast.error(`${file.name} is too large (max 4MB)`);
                     return null;
                 }
 
@@ -143,7 +143,7 @@ export function ImageUpload({ onImagesChange, maxImages = 5, currentImages = [] 
                             <div>
                                 <p className="font-medium">Click to upload or drag and drop</p>
                                 <p className="text-sm text-muted-foreground">
-                                    PNG, JPG, GIF up to 5MB ({images.length}/{maxImages})
+                                    PNG, JPG, GIF up to 4MB ({images.length}/{maxImages})
                                 </p>
                             </div>
                         </>

@@ -34,9 +34,9 @@ export function SingleImageUpload({
             return;
         }
 
-        // Validate file size (5MB max)
-        if (file.size > 5 * 1024 * 1024) {
-            toast.error("Image must be less than 5MB");
+        // Validate file size (4MB max)
+        if (file.size > 4 * 1024 * 1024) {
+            toast.error("Image must be less than 4MB");
             return;
         }
 
@@ -141,7 +141,7 @@ export function SingleImageUpload({
                                 <div>
                                     <p className="text-sm font-medium">Click to upload or drag</p>
                                     <p className="text-xs text-muted-foreground">
-                                        PNG, JPG, GIF up to 5MB
+                                        PNG, JPG, GIF up to 4MB
                                     </p>
                                 </div>
                             </>
