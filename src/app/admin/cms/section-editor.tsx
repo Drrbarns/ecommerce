@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { Save, Loader2 } from "lucide-react";
 import { updateCMSContent, CMSContent } from "@/lib/actions/cms-actions";
+import { SingleImageUpload } from "@/components/admin/single-image-upload";
 
 interface SectionEditorProps {
     section: CMSContent;
@@ -118,29 +119,16 @@ export function SectionEditor({ section, onSave }: SectionEditorProps) {
                 );
             }
 
-            // Image URL input with preview
+            // Image upload (replaces URL input)
             if (key.includes('image') || key.includes('Image')) {
                 return (
-                    <div key={key} className="space-y-2">
-                        <Label htmlFor={key}>{capitalizedLabel}</Label>
-                        <Input
-                            id={key}
-                            value={value}
-                            onChange={(e) => updateField(key, e.target.value)}
-                            placeholder="Enter image URL (e.g., https://example.com/image.jpg)"
+                    <div key={key} className="space-y-2 col-span-2">
+                        <SingleImageUpload
+                            label={capitalizedLabel}
+                            currentImage={value || ""}
+                            folder="cms"
+                            onImageChange={(url) => updateField(key, url || "")}
                         />
-                        {value && (
-                            <div className="relative w-full h-32 rounded-lg overflow-hidden bg-muted">
-                                <img
-                                    src={value}
-                                    alt="Preview"
-                                    className="w-full h-full object-cover"
-                                    onError={(e) => {
-                                        (e.target as HTMLImageElement).style.display = 'none';
-                                    }}
-                                />
-                            </div>
-                        )}
                         <p className="text-xs text-muted-foreground">
                             Leave empty to use the background color instead.
                         </p>
