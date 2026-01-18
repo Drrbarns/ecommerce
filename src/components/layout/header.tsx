@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Search, ShoppingBag, User, Menu } from "lucide-react";
+import { Search, ShoppingBag, User, Menu, CreditCard, Home, LayoutGrid, Info, Phone, Briefcase, Package } from "lucide-react";
 
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
@@ -48,7 +48,7 @@ export function Header() {
     return (
         <header
             className={cn(
-                "z-50 w-full transition-all duration-300 border-b bg-background shadow-sm",
+                "z-50 w-full transition-all duration-300 border-b bg-white dark:bg-zinc-950 shadow-sm",
                 "sticky top-0"
             )}
         >
@@ -65,23 +65,65 @@ export function Header() {
                             <span className="sr-only">Toggle menu</span>
                         </Button>
                     </SheetTrigger>
-                    <SheetContent side="left" className="w-[300px] sm:w-[400px]">
-                        <SheetHeader>
-                            <SheetTitle className="font-heading text-xl font-bold">
+                    <SheetContent side="left" className="w-[300px] sm:w-[400px] flex flex-col h-full">
+                        <SheetHeader className="text-left border-b pb-4 mb-2">
+                            <SheetTitle className="font-heading text-2xl font-bold tracking-tight text-primary">
                                 {siteConfig.name}
                             </SheetTitle>
+                            <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
+                                Explore Premium Collections
+                            </p>
                         </SheetHeader>
-                        <nav className="flex flex-col gap-4 mt-8">
-                            {siteConfig.nav.map((item) => (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className="text-lg font-medium transition-colors hover:text-primary"
-                                >
-                                    {item.name}
-                                </Link>
-                            ))}
+                        <nav className="flex flex-col gap-1 flex-1 overflow-y-auto py-4">
+                            {siteConfig.nav.map((item) => {
+                                const Icon = item.href === "/" ? Home :
+                                    item.href === "/shop" ? ShoppingBag :
+                                        item.href === "/collections" ? LayoutGrid :
+                                            item.href === "/about" ? Info :
+                                                item.href === "/contact" ? Phone :
+                                                    item.href === "/careers" ? Briefcase :
+                                                        Package;
+                                return (
+                                    <Link
+                                        key={item.href}
+                                        href={item.href}
+                                        className="flex items-center gap-4 px-2 py-3 text-lg font-medium transition-colors hover:bg-muted/50 rounded-lg group"
+                                    >
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/50 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                                            <Icon className="h-5 w-5" />
+                                        </div>
+                                        {item.name}
+                                    </Link>
+                                )
+                            })}
                         </nav>
+
+                        <div className="border-t pt-6 pb-8 mt-auto space-y-4">
+                            <Button
+                                variant="outline"
+                                className="w-full justify-start h-12 text-base font-medium gap-3 rounded-xl border-2 hover:bg-secondary/50"
+                                onClick={() => setOpen(true)}
+                            >
+                                <div className="relative">
+                                    <ShoppingBag className="h-5 w-5" />
+                                    {getCartCount() > 0 && (
+                                        <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">
+                                            {getCartCount()}
+                                        </span>
+                                    )}
+                                </div>
+                                View Cart
+                            </Button>
+                            <Button
+                                className="w-full justify-between h-12 text-base font-semibold rounded-xl bg-primary text-primary-foreground shadow-lg hover:bg-primary/90"
+                                asChild
+                            >
+                                <Link href="/checkout">
+                                    Proceed to Checkout
+                                    <CreditCard className="h-5 w-5" />
+                                </Link>
+                            </Button>
+                        </div>
                     </SheetContent>
                 </Sheet>
 
