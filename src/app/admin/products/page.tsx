@@ -1,11 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { getProducts } from "@/lib/api";
+import { DeleteProductButton } from "./delete-product-button";
 
 export default async function AdminProductsPage() {
     const products = await getProducts();
@@ -83,9 +84,10 @@ export default async function AdminProductsPage() {
                                                         <Pencil className="h-4 w-4" />
                                                     </Link>
                                                 </Button>
-                                                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
-                                                    <Trash2 className="h-4 w-4" />
-                                                </Button>
+                                                <DeleteProductButton
+                                                    productId={product.id}
+                                                    productName={product.name}
+                                                />
                                             </div>
                                         </td>
                                     </tr>
