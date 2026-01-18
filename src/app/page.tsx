@@ -27,7 +27,8 @@ export default async function Home() {
     collectionContent,
     productContent,
     newsletterContent,
-    homepageSettings
+    homepageSettings,
+    heroContent
   ] = await Promise.all([
     getProducts(),
     getFeaturedProducts(),
@@ -36,6 +37,7 @@ export default async function Home() {
     getCMSContent<SectionContent>("featured_products"),
     getCMSContent<SectionContent>("newsletter_section"),
     getCMSContent<HomepageSettings>("homepage_settings"),
+    getCMSContent<any>("hero"),
   ]);
 
   // Determine which layout to use (default to premium)
@@ -64,6 +66,7 @@ export default async function Home() {
           <HomepagePremium
             products={displayProducts}
             categories={collections}
+            heroContent={heroContent}
             collectionContent={collectionContent}
             productContent={productContent}
             newsletterContent={newsletterContent}
@@ -74,6 +77,7 @@ export default async function Home() {
           <HomepageMinimal
             products={displayProducts}
             categories={collections}
+            heroContent={heroContent}
             collectionContent={collectionContent}
             productContent={productContent}
             newsletterContent={newsletterContent}

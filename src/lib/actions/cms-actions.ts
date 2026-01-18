@@ -20,7 +20,7 @@ export interface CMSContent {
     updated_at: string;
 }
 
-export type HeroVariant = "split" | "centered" | "minimal" | "fullscreen";
+export type HeroVariant = "split" | "centered" | "minimal" | "fullscreen" | "premium";
 
 export interface HeroContent {
     variant?: HeroVariant;          // Design variant selection
@@ -37,6 +37,11 @@ export interface HeroContent {
     cardBackgroundColor?: string;  // Hero card/container background
     textColor?: string;            // Main headline color
     subtitleColor?: string;        // Subtitle text color
+
+    // Premium Slider specific fields
+    slides?: HeroSlideContent[];
+    autoPlay?: boolean;
+    autoPlayInterval?: number;
 }
 
 export interface FooterContent {

@@ -59,7 +59,11 @@ export function HomepagePremium({
             <AnnouncementBar />
 
             {/* Hero Section - Premium Slider */}
-            <HeroPremium />
+            <HeroPremium
+                slides={heroContent?.slides}
+                autoPlay={heroContent?.autoPlay}
+                autoPlayInterval={heroContent?.autoPlayInterval}
+            />
 
             {/* Trust Badges */}
             <TrustBadges />

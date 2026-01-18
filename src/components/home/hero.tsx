@@ -25,6 +25,7 @@ const heroVariants = {
     centered: HeroCentered,
     minimal: HeroMinimal,
     fullscreen: HeroFullscreen,
+    premium: HeroSplit,
 };
 
 export async function Hero() {
