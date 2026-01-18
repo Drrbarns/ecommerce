@@ -24,8 +24,13 @@ export async function POST(request: NextRequest) {
 
     const rawBody = await request.text();
 
-    // Verify webhook signature
-    if (!adapter.verifyWebhookSignature(rawBody, signature)) {
+    // Verify webhook signature using credentials from DB
+    const isValid = await adapter.verifyWebhook(rawBody, signature);
+
+    // Fallback to Env var if DB verification fails (for legacy/transition support)
+    const isLegacyValid = !isValid ? adapter.verifyWebhookSignature(rawBody, signature) : false;
+
+    if (!isValid && !isLegacyValid) {
         console.error('Invalid Paystack webhook signature');
         return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
     }
@@ -73,6 +78,7 @@ export async function POST(request: NextRequest) {
         // Handle different event types
         if (eventType === 'charge.success') {
             const reference = data.reference;
+            console.log('[Paystack] Processing successful charge for reference:', reference);
 
             // Verify the payment
             await verifyPayment({
