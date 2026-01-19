@@ -97,8 +97,12 @@ export function ProductNewForm({ categories }: ProductNewFormProps) {
                 throw new Error(result.error);
             }
 
-            toast.success("Product created successfully!");
-            router.push(`/admin/products`);
+            toast.success("Product created successfully! You can now add variants and additional details.");
+            if (result.productId) {
+                router.push(`/admin/products/${result.productId}`);
+            } else {
+                router.push(`/admin/products`);
+            }
             router.refresh();
         } catch (error: any) {
             toast.error(error.message || "Failed to create product");

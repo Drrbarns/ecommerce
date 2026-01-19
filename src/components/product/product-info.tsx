@@ -53,9 +53,8 @@ export function ProductInfo({ product }: ProductInfoProps) {
 
             {/* Description */}
             <div className="text-base text-muted-foreground">
-                <p>
-                    Experience premium quality with the {product.name}. Designed for the modern lifestyle,
-                    combining durability with elegant aesthetics. Perfect for everyday use.
+                <p className="whitespace-pre-line">
+                    {product.description || "No description available."}
                 </p>
             </div>
 
