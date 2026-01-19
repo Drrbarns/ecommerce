@@ -8,6 +8,18 @@ const supabase = createClient(
     process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
+export interface Category {
+    id: string;
+    name: string;
+    slug: string;
+    description?: string;
+    image?: string;
+    product_count?: number;
+    parent_id?: string;
+    sort_order?: number;
+    is_active?: boolean;
+}
+
 /**
  * Get all categories with product count
  */
