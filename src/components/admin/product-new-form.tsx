@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, Check } from "lucide-react";
 import { toast } from "sonner";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,7 +19,6 @@ import { Category } from "@/lib/actions/category-actions";
 import { Brand } from "@/lib/actions/brand-actions";
 import { bulkCreateVariants } from "@/lib/actions/variant-actions";
 import { Separator } from "@/components/ui/separator";
-import { Check } from "lucide-react";
 
 interface ProductNewFormProps {
     categories: Category[];
@@ -34,14 +33,17 @@ export function ProductNewForm({ categories, brands }: ProductNewFormProps) {
         slug: "",
         description: "",
         price: "",
+        cost: "",
+        compareAtPrice: "",
         images: [] as string[],
         categoryId: "",
         brandId: "",
         sku: "",
-        cost: "",
         isNew: false,
         isSale: false,
         isFeatured: false,
+        isActive: true,
+        status: "published",
         inventoryCount: "0",
         lowStockThreshold: "5",
         seoTitle: "",
@@ -74,6 +76,10 @@ export function ProductNewForm({ categories, brands }: ProductNewFormProps) {
         setFormData({ ...formData, images });
     };
 
+    const handleCheckboxChange = (id: string, checked: boolean) => {
+        setFormData({ ...formData, [id]: checked });
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -90,7 +96,7 @@ export function ProductNewForm({ categories, brands }: ProductNewFormProps) {
         setIsLoading(true);
 
         try {
-            // Find category name for legacy support or convenience
+            // Find category name for legacy support
             const selectedCategory = categories.find(c => c.id === formData.categoryId);
 
             const result = await createProduct({
@@ -100,18 +106,21 @@ export function ProductNewForm({ categories, brands }: ProductNewFormProps) {
                 description: formData.description,
                 price: parseFloat(formData.price),
                 cost: formData.cost ? parseFloat(formData.cost) : undefined,
+                compareAtPrice: formData.compareAtPrice ? parseFloat(formData.compareAtPrice) : undefined,
                 image: formData.images[0], // Cover photo
                 images: formData.images,
                 categoryId: formData.categoryId || undefined,
                 category: selectedCategory?.name || "",
+                brandId: formData.brandId || undefined,
+                status: formData.status as any,
                 isNew: formData.isNew,
                 isSale: formData.isSale,
                 isFeatured: formData.isFeatured,
+                isActive: formData.isActive,
                 inventoryCount: parseInt(formData.inventoryCount) || 0,
                 lowStockThreshold: parseInt(formData.lowStockThreshold) || 5,
                 seoTitle: formData.seoTitle,
                 seoDescription: formData.seoDescription,
-                brandId: formData.brandId || undefined,
             });
 
             if (!result.success) {
@@ -164,7 +173,7 @@ export function ProductNewForm({ categories, brands }: ProductNewFormProps) {
 
             <form onSubmit={handleSubmit}>
                 <div className="grid gap-6 lg:grid-cols-3">
-                    {/* Main Content */}
+                    {/* Main Content (Left Column) */}
                     <div className="lg:col-span-2 space-y-6">
                         {/* Product Information */}
                         <Card>
@@ -221,195 +230,48 @@ export function ProductNewForm({ categories, brands }: ProductNewFormProps) {
                             <CardContent>
                                 <ImageUpload
                                     onImagesChange={handleImagesChange}
-                                    maxImages={5}
+                                    maxImages={10}
                                     currentImages={formData.images}
                                 />
                             </CardContent>
                         </Card>
 
-                        {/* SEO Settings */}
+                        {/* Inventory & Logistics */}
                         <Card>
                             <CardHeader>
-                                <CardTitle>Search Engine Optimization</CardTitle>
-                                <CardDescription>
-                                    Optimize your product for search engines.
-                                </CardDescription>
+                                <CardTitle>Inventory & Logistics</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <div className="grid gap-2">
-                                    <Label htmlFor="seoTitle">Page Title</Label>
-                                    <Input
-                                        id="seoTitle"
-                                        placeholder={formData.name || "Product Title"}
-                                        value={formData.seoTitle}
-                                        onChange={handleChange}
-                                    />
-                                    <p className="text-xs text-muted-foreground">
-                                        Defaults to product name if left blank.
-                                    </p>
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="seoDescription">Meta Description</Label>
-                                    <Textarea
-                                        id="seoDescription"
-                                        placeholder={formData.description?.slice(0, 160) || "Product description..."}
-                                        value={formData.seoDescription}
-                                        onChange={handleChange}
-                                        rows={3}
-                                    />
-                                    <p className="text-xs text-muted-foreground">
-                                        Defaults to product description if left blank.
-                                    </p>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
-
-                    {/* Sidebar */}
-                    <div className="space-y-6">
-                        {/* Pricing */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Pricing</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="grid gap-2">
-                                    <Label htmlFor="price">Price (₵) *</Label>
-                                    <Input
-                                        id="price"
-                                        type="number"
-                                        step="0.01"
-                                        placeholder="0.00"
-                                        value={formData.price}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="cost">Cost Price (₵)</Label>
-                                    <Input
-                                        id="cost"
-                                        type="number"
-                                        step="0.01"
-                                        placeholder="0.00"
-                                        value={formData.cost}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        {/* Inventory */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Inventory</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="grid gap-2">
-                                    <Label htmlFor="sku">SKU</Label>
-                                    <Input
-                                        id="sku"
-                                        placeholder="e.g. BAG-001"
-                                        value={formData.sku}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="inventoryCount">Stock Quantity</Label>
-                                    <Input
-                                        id="inventoryCount"
-                                        type="number"
-                                        min="0"
-                                        value={formData.inventoryCount}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="lowStockThreshold">Low Stock Threshold</Label>
-                                    <Input
-                                        id="lowStockThreshold"
-                                        type="number"
-                                        min="0"
-                                        value={formData.lowStockThreshold}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        {/* Organization */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Organization</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="grid gap-2">
-                                    <Label htmlFor="category">Category</Label>
-                                    <Select
-                                        value={formData.categoryId}
-                                        onValueChange={(val) => setFormData({ ...formData, categoryId: val })}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select a category" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {categories.map((c) => (
-                                                <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
-                                            ))}
-                                            {categories.length === 0 && (
-                                                <SelectItem value="none" disabled>No categories found</SelectItem>
-                                            )}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="brandId">Brand</Label>
-                                    <Select
-                                        value={formData.brandId}
-                                        onValueChange={(val) => setFormData({ ...formData, brandId: val })}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select a brand" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {brands && brands.map((b) => (
-                                                <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>
-                                            ))}
-                                            {(!brands || brands.length === 0) && (
-                                                <SelectItem value="none" disabled>No brands found</SelectItem>
-                                            )}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <Checkbox
-                                        id="isNew"
-                                        checked={formData.isNew}
-                                        onCheckedChange={(checked) =>
-                                            setFormData({ ...formData, isNew: checked as boolean })
-                                        }
-                                    />
-                                    <Label htmlFor="isNew" className="font-normal">Mark as New</Label>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <Checkbox
-                                        id="isSale"
-                                        checked={formData.isSale}
-                                        onCheckedChange={(checked) =>
-                                            setFormData({ ...formData, isSale: checked as boolean })
-                                        }
-                                    />
-                                    <Label htmlFor="isSale" className="font-normal">On Sale</Label>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <Checkbox
-                                        id="isFeatured"
-                                        checked={formData.isFeatured}
-                                        onCheckedChange={(checked) =>
-                                            setFormData({ ...formData, isFeatured: checked as boolean })
-                                        }
-                                    />
-                                    <Label htmlFor="isFeatured" className="font-normal">Featured Product</Label>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="sku">SKU</Label>
+                                        <Input
+                                            id="sku"
+                                            placeholder="e.g. BAG-001"
+                                            value={formData.sku}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="inventoryCount">Stock Quantity</Label>
+                                        <Input
+                                            id="inventoryCount"
+                                            type="number"
+                                            min="0"
+                                            value={formData.inventoryCount}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="lowStockThreshold">Low Stock Threshold</Label>
+                                        <Input
+                                            id="lowStockThreshold"
+                                            type="number"
+                                            min="0"
+                                            value={formData.lowStockThreshold}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
                                 </div>
                             </CardContent>
                         </Card>
@@ -417,7 +279,10 @@ export function ProductNewForm({ categories, brands }: ProductNewFormProps) {
                         {/* Variants Configuration */}
                         <Card>
                             <CardHeader>
-                                <CardTitle>Variants</CardTitle>
+                                <CardTitle>Product Variants</CardTitle>
+                                <CardDescription>
+                                    Manage size, color, and other variations.
+                                </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="flex items-center space-x-2">
@@ -486,19 +351,209 @@ export function ProductNewForm({ categories, brands }: ProductNewFormProps) {
                             </CardContent>
                         </Card>
 
-                        <Button type="submit" className="w-full" disabled={isLoading} size="lg">
-                            {isLoading ? (
-                                <>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    Creating Product...
-                                </>
-                            ) : (
-                                "Create Product"
-                            )}
-                        </Button>
+                        {/* SEO Settings */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Search Engine Optimization</CardTitle>
+                                <CardDescription>
+                                    Optimize your product for search engines.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="grid gap-2">
+                                    <Label htmlFor="seoTitle">Page Title</Label>
+                                    <Input
+                                        id="seoTitle"
+                                        placeholder={formData.name || "Product Title"}
+                                        value={formData.seoTitle}
+                                        onChange={handleChange}
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        Defaults to product name if left blank.
+                                    </p>
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="seoDescription">Meta Description</Label>
+                                    <Textarea
+                                        id="seoDescription"
+                                        placeholder={formData.description?.slice(0, 160) || "Product description..."}
+                                        value={formData.seoDescription}
+                                        onChange={handleChange}
+                                        rows={3}
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        Defaults to product description if left blank.
+                                    </p>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    {/* Sidebar (Right Column) */}
+                    <div className="space-y-6">
+                        {/* Status */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Status</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="grid gap-2">
+                                    <Label>Product Status</Label>
+                                    <Select
+                                        value={formData.status}
+                                        onValueChange={(val) => setFormData({ ...formData, status: val })}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="draft">Draft</SelectItem>
+                                            <SelectItem value="published">Published</SelectItem>
+                                            <SelectItem value="archived">Archived</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id="isActive"
+                                        checked={formData.isActive}
+                                        onCheckedChange={(checked) => handleCheckboxChange("isActive", checked as boolean)}
+                                    />
+                                    <Label htmlFor="isActive" className="font-normal">Active (Storefront)</Label>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Pricing */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Pricing</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="grid gap-2">
+                                    <Label htmlFor="price">Price (₵) *</Label>
+                                    <Input
+                                        id="price"
+                                        type="number"
+                                        step="0.01"
+                                        placeholder="0.00"
+                                        value={formData.price}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="compareAtPrice">Compare At Price (₵)</Label>
+                                    <Input
+                                        id="compareAtPrice"
+                                        type="number"
+                                        step="0.01"
+                                        placeholder="0.00"
+                                        value={formData.compareAtPrice}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="cost">Cost Price (₵)</Label>
+                                    <Input
+                                        id="cost"
+                                        type="number"
+                                        step="0.01"
+                                        placeholder="0.00"
+                                        value={formData.cost}
+                                        onChange={handleChange}
+                                    />
+                                    <p className="text-xs text-muted-foreground">For profit calculation</p>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Organization */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Organization</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="grid gap-2">
+                                    <Label htmlFor="category">Category</Label>
+                                    <Select
+                                        value={formData.categoryId}
+                                        onValueChange={(val) => setFormData({ ...formData, categoryId: val })}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select a category" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {categories.map((c) => (
+                                                <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                                            ))}
+                                            {categories.length === 0 && (
+                                                <SelectItem value="none" disabled>No categories found</SelectItem>
+                                            )}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="brandId">Brand</Label>
+                                    <Select
+                                        value={formData.brandId}
+                                        onValueChange={(val) => setFormData({ ...formData, brandId: val })}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select a brand" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {brands && brands.map((b) => (
+                                                <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>
+                                            ))}
+                                            {(!brands || brands.length === 0) && (
+                                                <SelectItem value="none" disabled>No brands found</SelectItem>
+                                            )}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id="isNew"
+                                        checked={formData.isNew}
+                                        onCheckedChange={(checked) => handleCheckboxChange("isNew", checked as boolean)}
+                                    />
+                                    <Label htmlFor="isNew" className="font-normal">Mark as New</Label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id="isSale"
+                                        checked={formData.isSale}
+                                        onCheckedChange={(checked) => handleCheckboxChange("isSale", checked as boolean)}
+                                    />
+                                    <Label htmlFor="isSale" className="font-normal">On Sale</Label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id="isFeatured"
+                                        checked={formData.isFeatured}
+                                        onCheckedChange={(checked) => handleCheckboxChange("isFeatured", checked as boolean)}
+                                    />
+                                    <Label htmlFor="isFeatured" className="font-normal">Featured Product</Label>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <div className="sticky top-6">
+                            <Button type="submit" className="w-full" disabled={isLoading} size="lg">
+                                {isLoading ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Creating Product...
+                                    </>
+                                ) : (
+                                    "Create Product"
+                                )}
+                            </Button>
+                        </div>
                     </div>
                 </div>
-            </form >
-        </div >
+            </form>
+        </div>
     );
 }
