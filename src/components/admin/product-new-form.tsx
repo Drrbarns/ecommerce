@@ -16,15 +16,17 @@ import { ImageUpload } from "@/components/admin/image-upload";
 import { createProduct } from "@/lib/actions/product-actions";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Category } from "@/lib/actions/category-actions";
+import { Brand } from "@/lib/actions/brand-actions";
 import { bulkCreateVariants } from "@/lib/actions/variant-actions";
 import { Separator } from "@/components/ui/separator";
 import { Check } from "lucide-react";
 
 interface ProductNewFormProps {
     categories: Category[];
+    brands: Brand[];
 }
 
-export function ProductNewForm({ categories }: ProductNewFormProps) {
+export function ProductNewForm({ categories, brands }: ProductNewFormProps) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
@@ -34,12 +36,16 @@ export function ProductNewForm({ categories }: ProductNewFormProps) {
         price: "",
         images: [] as string[],
         categoryId: "",
+        brandId: "",
         sku: "",
         cost: "",
         isNew: false,
         isSale: false,
         isFeatured: false,
         inventoryCount: "0",
+        lowStockThreshold: "5",
+        seoTitle: "",
+        seoDescription: "",
     });
 
     const [enableVariants, setEnableVariants] = useState(false);
@@ -102,6 +108,10 @@ export function ProductNewForm({ categories }: ProductNewFormProps) {
                 isSale: formData.isSale,
                 isFeatured: formData.isFeatured,
                 inventoryCount: parseInt(formData.inventoryCount) || 0,
+                lowStockThreshold: parseInt(formData.lowStockThreshold) || 5,
+                seoTitle: formData.seoTitle,
+                seoDescription: formData.seoDescription,
+                brandId: formData.brandId || undefined,
             });
 
             if (!result.success) {
@@ -216,6 +226,43 @@ export function ProductNewForm({ categories }: ProductNewFormProps) {
                                 />
                             </CardContent>
                         </Card>
+
+                        {/* SEO Settings */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Search Engine Optimization</CardTitle>
+                                <CardDescription>
+                                    Optimize your product for search engines.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="grid gap-2">
+                                    <Label htmlFor="seoTitle">Page Title</Label>
+                                    <Input
+                                        id="seoTitle"
+                                        placeholder={formData.name || "Product Title"}
+                                        value={formData.seoTitle}
+                                        onChange={handleChange}
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        Defaults to product name if left blank.
+                                    </p>
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="seoDescription">Meta Description</Label>
+                                    <Textarea
+                                        id="seoDescription"
+                                        placeholder={formData.description?.slice(0, 160) || "Product description..."}
+                                        value={formData.seoDescription}
+                                        onChange={handleChange}
+                                        rows={3}
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        Defaults to product description if left blank.
+                                    </p>
+                                </div>
+                            </CardContent>
+                        </Card>
                     </div>
 
                     {/* Sidebar */}
@@ -277,6 +324,16 @@ export function ProductNewForm({ categories }: ProductNewFormProps) {
                                         onChange={handleChange}
                                     />
                                 </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="lowStockThreshold">Low Stock Threshold</Label>
+                                    <Input
+                                        id="lowStockThreshold"
+                                        type="number"
+                                        min="0"
+                                        value={formData.lowStockThreshold}
+                                        onChange={handleChange}
+                                    />
+                                </div>
                             </CardContent>
                         </Card>
 
@@ -301,6 +358,25 @@ export function ProductNewForm({ categories }: ProductNewFormProps) {
                                             ))}
                                             {categories.length === 0 && (
                                                 <SelectItem value="none" disabled>No categories found</SelectItem>
+                                            )}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="brandId">Brand</Label>
+                                    <Select
+                                        value={formData.brandId}
+                                        onValueChange={(val) => setFormData({ ...formData, brandId: val })}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select a brand" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {brands && brands.map((b) => (
+                                                <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>
+                                            ))}
+                                            {(!brands || brands.length === 0) && (
+                                                <SelectItem value="none" disabled>No brands found</SelectItem>
                                             )}
                                         </SelectContent>
                                     </Select>
@@ -422,7 +498,7 @@ export function ProductNewForm({ categories }: ProductNewFormProps) {
                         </Button>
                     </div>
                 </div>
-            </form>
-        </div>
+            </form >
+        </div >
     );
 }
