@@ -111,6 +111,14 @@ BEGIN
         UPDATE public.products SET price_minor = CAST(price * 100 AS INTEGER) WHERE price_minor IS NULL;
     END IF;
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                   WHERE table_name = 'products' AND column_name = 'cost_minor') THEN
+        ALTER TABLE public.products ADD COLUMN cost_minor INTEGER;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                   WHERE table_name = 'products' AND column_name = 'sku') THEN
+        ALTER TABLE public.products ADD COLUMN sku TEXT UNIQUE;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
                    WHERE table_name = 'products' AND column_name = 'compare_at_price_minor') THEN
         ALTER TABLE public.products ADD COLUMN compare_at_price_minor INTEGER;
     END IF;

@@ -116,6 +116,25 @@ CREATE TRIGGER trigger_create_order_timeline
 -- Migration 013: Media Library
 -- Centralized media upload management system
 
+-- Create 'products' bucket for image storage
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('products', 'products', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Storage policies for products bucket
+DO $$
+BEGIN
+    DROP POLICY IF EXISTS "Public Read Products" ON storage.objects;
+    CREATE POLICY "Public Read Products" ON storage.objects FOR SELECT USING ( bucket_id = 'products' );
+    
+    DROP POLICY IF EXISTS "Auth Full Access Products" ON storage.objects;
+    CREATE POLICY "Auth Full Access Products" ON storage.objects FOR ALL 
+    USING ( bucket_id = 'products' AND auth.role() IN ('authenticated', 'service_role') )
+    WITH CHECK ( bucket_id = 'products' AND auth.role() IN ('authenticated', 'service_role') );
+EXCEPTION
+    WHEN undefined_object THEN NULL;
+END $$;
+
 CREATE TABLE IF NOT EXISTS public.media_uploads (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL,
