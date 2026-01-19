@@ -16,6 +16,9 @@ import { ImageUpload } from "@/components/admin/image-upload";
 import { createProduct } from "@/lib/actions/product-actions";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Category } from "@/lib/actions/category-actions";
+import { bulkCreateVariants } from "@/lib/actions/variant-actions";
+import { Separator } from "@/components/ui/separator";
+import { Check } from "lucide-react";
 
 interface ProductNewFormProps {
     categories: Category[];
@@ -37,6 +40,14 @@ export function ProductNewForm({ categories }: ProductNewFormProps) {
         isSale: false,
         isFeatured: false,
         inventoryCount: "0",
+    });
+
+    const [enableVariants, setEnableVariants] = useState(false);
+    const [variantOptions, setVariantOptions] = useState({
+        opt1Name: "Size",
+        opt1Values: "S, M, L",
+        opt2Name: "Color",
+        opt2Values: "",
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -97,12 +108,25 @@ export function ProductNewForm({ categories }: ProductNewFormProps) {
                 throw new Error(result.error);
             }
 
-            toast.success("Product created successfully! You can now add variants and additional details.");
-            if (result.productId) {
-                router.push(`/admin/products/${result.productId}`);
-            } else {
-                router.push(`/admin/products`);
+            // Create variants if enabled
+            if (enableVariants && result.productId) {
+                const values1 = variantOptions.opt1Values.split(',').map(s => s.trim()).filter(Boolean);
+                const values2 = variantOptions.opt2Values.split(',').map(s => s.trim()).filter(Boolean);
+
+                if (values1.length > 0) {
+                    await bulkCreateVariants(result.productId, {
+                        option1Name: variantOptions.opt1Name,
+                        option1Values: values1,
+                        option2Name: values2.length > 0 ? variantOptions.opt2Name : undefined,
+                        option2Values: values2.length > 0 ? values2 : undefined,
+                        basePrice: parseFloat(formData.price),
+                        baseSku: formData.sku || undefined
+                    });
+                }
             }
+
+            toast.success("Product created successfully!");
+            router.push(`/admin/products`);
             router.refresh();
         } catch (error: any) {
             toast.error(error.message || "Failed to create product");
@@ -311,6 +335,78 @@ export function ProductNewForm({ categories }: ProductNewFormProps) {
                                     />
                                     <Label htmlFor="isFeatured" className="font-normal">Featured Product</Label>
                                 </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Variants Configuration */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Variants</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id="enableVariants"
+                                        checked={enableVariants}
+                                        onCheckedChange={(checked) => setEnableVariants(checked as boolean)}
+                                    />
+                                    <Label htmlFor="enableVariants" className="font-normal">
+                                        This product has variants (Size, Color, etc.)
+                                    </Label>
+                                </div>
+
+                                {enableVariants && (
+                                    <div className="space-y-4 pt-2 animate-in slide-in-from-top-2 fade-in duration-200">
+                                        <Separator />
+
+                                        <div className="space-y-3">
+                                            <Label className="text-xs font-semibold uppercase text-muted-foreground">Option 1</Label>
+                                            <div className="grid gap-2">
+                                                <Label htmlFor="opt1Name">Name</Label>
+                                                <Input
+                                                    id="opt1Name"
+                                                    value={variantOptions.opt1Name}
+                                                    onChange={(e) => setVariantOptions({ ...variantOptions, opt1Name: e.target.value })}
+                                                    placeholder="e.g. Size"
+                                                />
+                                            </div>
+                                            <div className="grid gap-2">
+                                                <Label htmlFor="opt1Values">Values</Label>
+                                                <Input
+                                                    id="opt1Values"
+                                                    value={variantOptions.opt1Values}
+                                                    onChange={(e) => setVariantOptions({ ...variantOptions, opt1Values: e.target.value })}
+                                                    placeholder="Separate with commas: S, M, L"
+                                                />
+                                                <p className="text-xs text-muted-foreground">Comma-separated values</p>
+                                            </div>
+                                        </div>
+
+                                        <Separator />
+
+                                        <div className="space-y-3">
+                                            <Label className="text-xs font-semibold uppercase text-muted-foreground">Option 2 (Optional)</Label>
+                                            <div className="grid gap-2">
+                                                <Label htmlFor="opt2Name">Name</Label>
+                                                <Input
+                                                    id="opt2Name"
+                                                    value={variantOptions.opt2Name}
+                                                    onChange={(e) => setVariantOptions({ ...variantOptions, opt2Name: e.target.value })}
+                                                    placeholder="e.g. Color"
+                                                />
+                                            </div>
+                                            <div className="grid gap-2">
+                                                <Label htmlFor="opt2Values">Values</Label>
+                                                <Input
+                                                    id="opt2Values"
+                                                    value={variantOptions.opt2Values}
+                                                    onChange={(e) => setVariantOptions({ ...variantOptions, opt2Values: e.target.value })}
+                                                    placeholder="e.g. Red, Blue"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                             </CardContent>
                         </Card>
 
