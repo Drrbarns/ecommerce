@@ -119,6 +119,10 @@ BEGIN
         ALTER TABLE public.products ADD COLUMN sku TEXT UNIQUE;
     END IF;
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                   WHERE table_name = 'products' AND column_name = 'low_stock_threshold') THEN
+        ALTER TABLE public.products ADD COLUMN low_stock_threshold INTEGER DEFAULT 5;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
                    WHERE table_name = 'products' AND column_name = 'compare_at_price_minor') THEN
         ALTER TABLE public.products ADD COLUMN compare_at_price_minor INTEGER;
     END IF;
