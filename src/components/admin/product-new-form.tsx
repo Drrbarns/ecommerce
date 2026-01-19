@@ -35,6 +35,7 @@ export function ProductNewForm({ categories }: ProductNewFormProps) {
         cost: "",
         isNew: false,
         isSale: false,
+        isFeatured: false,
         inventoryCount: "0",
     });
 
@@ -88,6 +89,7 @@ export function ProductNewForm({ categories }: ProductNewFormProps) {
                 category: selectedCategory?.name || "",
                 isNew: formData.isNew,
                 isSale: formData.isSale,
+                isFeatured: formData.isFeatured,
                 inventoryCount: parseInt(formData.inventoryCount) || 0,
             });
 
@@ -294,6 +296,16 @@ export function ProductNewForm({ categories }: ProductNewFormProps) {
                                         }
                                     />
                                     <Label htmlFor="isSale" className="font-normal">On Sale</Label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id="isFeatured"
+                                        checked={formData.isFeatured}
+                                        onCheckedChange={(checked) =>
+                                            setFormData({ ...formData, isFeatured: checked as boolean })
+                                        }
+                                    />
+                                    <Label htmlFor="isFeatured" className="font-normal">Featured Product</Label>
                                 </div>
                             </CardContent>
                         </Card>

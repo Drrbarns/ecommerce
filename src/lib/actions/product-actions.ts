@@ -101,6 +101,7 @@ export async function createProduct(input: CreateProductInput) {
 
     revalidatePath('/admin/products');
     revalidatePath('/shop');
+    revalidatePath('/');
 
     return { success: true, productId: product.id };
 }
@@ -149,6 +150,7 @@ export async function updateProduct(productId: string, input: Partial<CreateProd
 
     revalidatePath('/admin/products');
     revalidatePath('/shop');
+    revalidatePath('/');
     if (input.slug) {
         revalidatePath(`/products/${input.slug}`);
     }
@@ -180,6 +182,7 @@ export async function deleteProduct(productId: string) {
 
     revalidatePath('/admin/products');
     revalidatePath('/shop');
+    revalidatePath('/');
 
     return { success: true };
 }
@@ -273,6 +276,7 @@ export async function bulkUpdateProducts(
 
     revalidatePath('/admin/products');
     revalidatePath('/shop');
+    revalidatePath('/');
 
     return { success: true };
 }
@@ -301,6 +305,8 @@ export async function updateProductSEO(
     }
 
     revalidatePath('/admin/products');
+    revalidatePath('/shop');
+    revalidatePath('/');
     return { success: true };
 }
 
@@ -326,6 +332,7 @@ export async function updateProductStatus(
 
     revalidatePath('/admin/products');
     revalidatePath('/shop');
+    revalidatePath('/');
     return { success: true };
 }
 
@@ -386,6 +393,8 @@ export async function adjustProductStock(
     }
 
     revalidatePath('/admin/products');
+    revalidatePath('/shop');
+    revalidatePath('/');
     return { success: true, newInventory };
 }
 
